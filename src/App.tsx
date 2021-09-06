@@ -1,10 +1,39 @@
 import React from 'react';
+import { BrowserRouter, Link, Route } from 'react-router-dom';
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
+import { HomePage } from './pages/HomePage';
+import { User } from './pages/User';
+import { Alert } from './pages/Alert';
+
 
 function App() {
   return (
+    <>
+    <BrowserRouter >
+       <div>
+         <nav>
+           <ul>
+             <li>
+               <Link to="/">Home</Link>
+             </li>
+             <li>
+               <Link to="/user">User Profile</Link>
+             </li>
+             <li>
+               <Link to="/alert">Alert</Link>
+             </li>
+           </ul>
+         </nav>
+ 
+         <Route path="/" exact component={HomePage} />
+         <Route path="/user" exact component={User} />
+         <Route path="/alert" exact component={Alert} />
+
+
+       </div>
+     </BrowserRouter >
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
@@ -52,6 +81,7 @@ function App() {
         </span>
       </header>
     </div>
+    </>
   );
 }
 
