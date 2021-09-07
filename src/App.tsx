@@ -6,6 +6,8 @@ import './App.css';
 import { HomePage } from './pages/HomePage';
 import { User } from './pages/User';
 import { Alert } from './pages/Alert';
+import UserSignUp from './pages/UserSignUp';
+import UserSignIn from './pages/UserSignIn';
 
 
 function App() {
@@ -22,6 +24,16 @@ function App() {
                <Link to="/user">User Profile</Link>
              </li>
              <li>
+               <Link to="/user/signup">
+                 User SignUp
+               </Link>
+             </li>
+             <li>
+               <Link to="/user/signin">
+                 User SignIn
+               </Link>
+             </li>
+             <li>
                <Link to="/alert">Alert</Link>
              </li>
            </ul>
@@ -29,12 +41,14 @@ function App() {
  
          <Route path="/" exact component={HomePage} />
          <Route path="/user" exact component={User} />
+         <Route path="/user/signup" exact component={UserSignUp} />
+         <Route path="/user/signin" exact component={UserSignIn} />
          <Route path="/alert" exact component={Alert} />
 
 
        </div>
      </BrowserRouter >
-    <div className="App">
+    {/* <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Counter />
@@ -80,7 +94,7 @@ function App() {
           </a>
         </span>
       </header>
-    </div>
+    </div> */}
     </>
   );
 }
