@@ -63,7 +63,6 @@ export default function UserSignUp() {
       const response = await fetch(url, requestOptions);
       console.log(`response`, await response.json());
     } catch (error) {
-      // alert(error);
       console.dir(`error`, error);
     }
   };

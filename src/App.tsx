@@ -9,8 +9,17 @@ import { Alert } from "./pages/Alert";
 import UserSignUp from "./pages/UserSignUp";
 import UserSignIn from "./pages/UserSignIn";
 import { AlertSnackBar } from "./components/AlertSnackBar";
+import Loader from "./components/Loader";
+import { useAppSelector } from "./app/hooks";
+import { useSelector } from "react-redux";
+import { RootState } from "./app/store";
 
 function App() {
+  // const isLoading = useAppSelector(state: RootState);
+  const isLoading = useSelector(
+    (state: RootState) => state.loader.value.loading
+  );
+
   return (
     <>
       <BrowserRouter>
@@ -19,6 +28,9 @@ function App() {
             <ul>
               <li>
                 <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/results">Results</Link>
               </li>
               <li>
                 <Link to="/user">User Profile</Link>
@@ -42,6 +54,7 @@ function App() {
           <Route path="/alert" exact component={Alert} />
         </div>
       </BrowserRouter>
+      {isLoading ? <Loader /> : null}
       <AlertSnackBar />
 
       {/* <div className="App">

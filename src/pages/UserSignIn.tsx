@@ -10,18 +10,36 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { signinUserSchema } from "../validation/signinUserSchema";
+import { setAlert } from "../redux/alertSlice";
+import { useDispatch } from "react-redux";
 
 const theme = createTheme();
 
 export default function UserSignIn() {
+  const dispatch = useDispatch();
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    const user = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+    const { error } = signinUserSchema.validate(user, {
+      errors: {
+        wrap: {
+          label: "",
+        },
+      },
     });
+    console.log("error=", error);
+    if (error) {
+      dispatch(
+        setAlert({
+          snackbarOpen: true,
+          snackbarType: "error",
+          snackbarMessage: error.details[0].message,
+        })
+      );
+    }
   };
 
   return (
