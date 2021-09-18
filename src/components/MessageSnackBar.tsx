@@ -2,16 +2,16 @@ import * as React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../app/hooks";
-import { selectAlert, unSetAlert } from "../redux/alertSlice";
+import { selectMessage, unSetMessage } from "../redux/messageSlice";
 import { Alert } from "@material-ui/core";
 
-export function AlertSnackBar() {
+export function MessageSnackBar() {
   const dispatch = useDispatch();
-  const snackbarOpen = useAppSelector(selectAlert).snackbarOpen;
-  const snackbarType = useAppSelector(selectAlert).snackbarType;
-  const snackbarMessage = useAppSelector(selectAlert).snackbarMessage;
+  const snackbarOpen = useAppSelector(selectMessage).snackbarOpen;
+  const snackbarType = useAppSelector(selectMessage).snackbarType;
+  const snackbarMessage = useAppSelector(selectMessage).snackbarMessage;
   const handleClose = (event: React.SyntheticEvent<Element, Event>) => {
-    dispatch(unSetAlert());
+    dispatch(unSetMessage());
   };
 
   return (

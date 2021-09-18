@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 
-export interface IAlert {
+export interface IMessage {
   value: {
     snackbarOpen: boolean;
     snackbarType: "success" | "info" | "warning" | "error";
@@ -9,7 +9,7 @@ export interface IAlert {
   };
 }
 
-const initialState: IAlert = {
+const initialState: IMessage = {
   value: {
     snackbarOpen: false,
     snackbarType: "error",
@@ -17,21 +17,21 @@ const initialState: IAlert = {
   },
 };
 
-export const alertSlice = createSlice({
-  name: "alert",
+export const messageSlice = createSlice({
+  name: "message",
   initialState,
   reducers: {
-    setAlert: (state, action) => {
+    setMessage: (state, action) => {
       state.value = action.payload;
     },
-    unSetAlert: (state) => {
+    unSetMessage: (state) => {
       state.value.snackbarOpen = false;
     },
   },
 });
 
-export const { setAlert, unSetAlert } = alertSlice.actions;
+export const { setMessage, unSetMessage } = messageSlice.actions;
 
-export const selectAlert = (state: RootState) => state.alert.value;
+export const selectMessage = (state: RootState) => state.message.value;
 
-export default alertSlice.reducer;
+export default messageSlice.reducer;

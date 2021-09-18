@@ -1,13 +1,15 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import counterReducer from "../features/counter/counterSlice";
-import alertReducer from "../redux/alertSlice";
+import messageReducer from "../redux/messageSlice";
 import loaderReducer from "../redux/loaderSlice";
+import userReducer from "../redux/userSlice";
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
-    alert: alertReducer,
+    message: messageReducer,
     loader: loaderReducer,
+    user: userReducer,
   },
 });
 

@@ -28,6 +28,6 @@ export const loaderSlice = createSlice({
 
 export const { setLoader, unSetLoader } = loaderSlice.actions;
 
-export const selectAlert = (state: RootState) => state.alert.value;
+export const selectAlert = (state: RootState) => state.message.value;
 
 export default loaderSlice.reducer;

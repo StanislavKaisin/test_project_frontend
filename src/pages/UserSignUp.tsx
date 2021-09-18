@@ -10,16 +10,20 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { AlertSnackBar } from "../components/AlertSnackBar";
+import { MessageSnackBar } from "../components/MessageSnackBar";
 import { BASE_URL } from "../api/api.config";
 import { createUserSchema } from "../validation/createUserSchema";
-import { useDispatch } from "react-redux";
-import { setAlert } from "../redux/alertSlice";
+import { setMessage } from "../redux/messageSlice";
+import { useAppDispatch } from "../app/hooks";
+import { addNewUser } from "../redux/userSlice";
+import { useHistory } from "react-router";
 
 const theme = createTheme();
 
 export default function UserSignUp() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const history = useHistory();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -40,30 +44,18 @@ export default function UserSignUp() {
         },
       },
     });
-    console.log("error=", error);
+    // console.log("error=", error);
     if (error) {
       dispatch(
-        setAlert({
+        setMessage({
           snackbarOpen: true,
           snackbarType: "error",
           snackbarMessage: error.details[0].message,
         })
       );
-    }
-
-    const url = `${BASE_URL}/users`;
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
-    };
-    try {
-      // const response = await axios.post(url, user);
-      console.log(`url`, url);
-      const response = await fetch(url, requestOptions);
-      console.log(`response`, await response.json());
-    } catch (error) {
-      console.dir(`error`, error);
+    } else {
+      await dispatch(addNewUser(user));
+      await history.push("/user/signin");
     }
   };
 
@@ -173,7 +165,7 @@ export default function UserSignUp() {
             </Grid>
           </Box>
         </Box>
-        <AlertSnackBar />
+        <MessageSnackBar />
       </Container>
     </ThemeProvider>
   );

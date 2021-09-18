@@ -8,20 +8,24 @@ import { User } from "./pages/User";
 import { Alert } from "./pages/Alert";
 import UserSignUp from "./pages/UserSignUp";
 import UserSignIn from "./pages/UserSignIn";
-import { AlertSnackBar } from "./components/AlertSnackBar";
+import { MessageSnackBar } from "./components/MessageSnackBar";
 import Loader from "./components/Loader";
 import { useAppSelector } from "./app/hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "./app/store";
+import MenuAppBar from "./components/MenuAppBar";
 
 function App() {
-  // const isLoading = useAppSelector(state: RootState);
-  const isLoading = useSelector(
+  const isLoading = useAppSelector(
     (state: RootState) => state.loader.value.loading
   );
+  // const isLoading = useSelector(
+  //   (state: RootState) => state.loader.value.loading
+  // );
 
   return (
     <>
+      <MenuAppBar />
       <BrowserRouter>
         <div>
           <nav>
@@ -55,7 +59,7 @@ function App() {
         </div>
       </BrowserRouter>
       {isLoading ? <Loader /> : null}
-      <AlertSnackBar />
+      <MessageSnackBar />
 
       {/* <div className="App">
       <header className="App-header">

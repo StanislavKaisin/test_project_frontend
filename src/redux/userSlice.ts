@@ -3,16 +3,33 @@ import { string } from "joi";
 import { BASE_URL } from "../api/api.config";
 import { useAppDispatch } from "../app/hooks";
 import { RootState } from "../app/store";
-import { setAlert } from "./alertSlice";
-import { setLoader } from "./loaderSlice";
+import { setMessage } from "./messageSlice";
+import { setLoader, unSetLoader } from "./loaderSlice";
+import { useHistory } from "react-router-dom";
 
 export interface IUser {
-  value: {
-    userId: string;
-    token: string;
-    status: null | string;
-    error: null | string;
-  };
+  userId: string;
+  token: string;
+  userData?: IUserData;
+}
+
+export interface IUserData {
+  name: string;
+  email: string;
+  password?: string;
+  phone: string;
+  viber: string;
+  address: string;
+}
+export interface IUserCreateResponse {
+  token: string;
+  _id: string;
+  name: string;
+  email: string;
+  password?: string;
+  phone: string;
+  viber: string;
+  address: string;
 }
 
 export interface IUserAction {
@@ -20,25 +37,22 @@ export interface IUserAction {
   payload: {
     _id: string;
     token: string;
+    userData?: IUserData;
   };
 }
 
 const initialState: IUser = {
-  value: {
-    userId: "",
-    token: "",
-    status: null,
-    error: null,
-  },
+  userId: "",
+  token: "",
+  // userData: null,
 };
-
-const dispatch = useAppDispatch();
 
 export const addNewUser = createAsyncThunk(
   "user/addNewUser",
-  async function (user, { rejectWithValue, dispatch }) {
+  async function (user: any, { rejectWithValue, dispatch }) {
     try {
       dispatch(setLoader());
+
       const response = await fetch(`${BASE_URL}/users`, {
         method: "POST",
         headers: {
@@ -48,55 +62,55 @@ export const addNewUser = createAsyncThunk(
       });
 
       if (!response.ok) {
-        throw new Error("Can't add task. Server error.");
+        let errorMessage = await response.json();
+        throw new Error(errorMessage.message);
       }
+      const data = (await response.json()) as IUserCreateResponse;
+      console.log("data :>> ", data);
+      const { password, ...rest } = data;
+      const { _id, token, ...userData } = rest;
+      console.log("password :>> ", password);
+      const currentUser: IUser = {
+        userId: _id,
+        token,
+        userData: { ...userData },
+      };
 
-      const data = await response.json();
-      dispatch(setCurrentUser(data));
+      dispatch(setCurrentUser(currentUser));
+      dispatch(unSetLoader());
+      dispatch(
+        setMessage({
+          snackbarOpen: true,
+          snackbarType: "success",
+          snackbarMessage: "User successfully created!",
+        })
+      );
     } catch (error) {
       // return rejectWithValue(error.message);
-      dispatch(setAlert(error));
+      // console.log("error :>> ", JSON.stringify(error));
+      dispatch(
+        setMessage({
+          snackbarOpen: true,
+          snackbarType: "error",
+          snackbarMessage: error?.message,
+        })
+      );
+      dispatch(unSetLoader());
     }
   }
 );
-
-// const setError = (state: typeof initialState, action: any) => {
-//   state.status = "rejected";
-//   state.error = action.payload;
-// };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     setCurrentUser(state, action) {
-      state.value = action.payload;
+      state = action.payload;
     },
     unSetCurrentUser(state, action) {
       state = initialState;
     },
   },
-  /*
-  extraReducers: (builder) => {
-    builder.addCase(addNewUser.pending, (state, action) => {
-      state.value.status = "loading";
-    });
-    builder.addCase(addNewUser.fulfilled, (state, action) => {
-      state.value.token = action.payload.token;
-      state.value.userId = action.payload._id;
-    });
-    // [addNewUser.pending]: (state: typeof initialState) => {
-    //   state.value.status = "loading";
-    //   state.value.error = null;
-    // },
-    // [addNewUser.fulfilled]: (state: typeof initialState, action: any) => {
-    //   state.value.status = "resolved";
-    //   state.value.token = action.payload.token;
-    //   state.value.userId = action.payload._id;
-    // },
-    // [addNewUser.rejected]: setError,
-  },
-  */
 });
 
 const { setCurrentUser, unSetCurrentUser } = userSlice.actions;

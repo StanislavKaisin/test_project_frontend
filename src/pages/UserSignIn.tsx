@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { signinUserSchema } from "../validation/signinUserSchema";
-import { setAlert } from "../redux/alertSlice";
+import { setMessage } from "../redux/messageSlice";
 import { useDispatch } from "react-redux";
 
 const theme = createTheme();
@@ -21,7 +21,14 @@ export default function UserSignIn() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const user = new FormData(event.currentTarget);
+    const data = new FormData(event.currentTarget);
+    // console.log("data=", data);
+    const user = {
+      email: data.get("email"),
+      password: data.get("password"),
+    };
+    // console.log("user=", user);
+
     // eslint-disable-next-line no-console
     const { error } = signinUserSchema.validate(user, {
       errors: {
@@ -33,7 +40,7 @@ export default function UserSignIn() {
     console.log("error=", error);
     if (error) {
       dispatch(
-        setAlert({
+        setMessage({
           snackbarOpen: true,
           snackbarType: "error",
           snackbarMessage: error.details[0].message,
