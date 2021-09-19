@@ -44,7 +44,7 @@ export default function UserSignUp() {
         },
       },
     });
-    // console.log("error=", error);
+
     if (error) {
       dispatch(
         setMessage({
@@ -54,8 +54,7 @@ export default function UserSignUp() {
         })
       );
     } else {
-      await dispatch(addNewUser(user));
-      await history.push("/user/signin");
+      await dispatch(addNewUser(user)).then(() => history.push("/user/signin"));
     }
   };
 
@@ -165,7 +164,6 @@ export default function UserSignUp() {
             </Grid>
           </Box>
         </Box>
-        <MessageSnackBar />
       </Container>
     </ThemeProvider>
   );

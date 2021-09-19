@@ -1,11 +1,11 @@
 import * as React from "react";
-import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import { LinearProgress } from "@material-ui/core";
 
 export default function Loader() {
   return (
-    <Box sx={{ display: "flex" }}>
-      <CircularProgress />
+    <Box sx={{ width: "100%" }}>
+      <LinearProgress />
     </Box>
   );
 }

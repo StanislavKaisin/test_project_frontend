@@ -11,9 +11,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import { RootState } from "../app/store";
+import { useAppSelector } from "../app/hooks";
+import { useHistory } from "react-router";
 
 export default function MenuAppBar() {
   const [auth, setAuth] = React.useState(true);
+  const history = useHistory();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,6 +31,7 @@ export default function MenuAppBar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+    history.push("user");
   };
 
   return (

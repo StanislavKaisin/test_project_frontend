@@ -1,5 +1,3 @@
-// export const alerts = [{ title: "", description: "" }];
-
 export const alerts = [
   {
     title: ``,

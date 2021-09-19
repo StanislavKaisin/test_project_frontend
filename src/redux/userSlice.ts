@@ -1,51 +1,101 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { string } from "joi";
 import { BASE_URL } from "../api/api.config";
 import { useAppDispatch } from "../app/hooks";
 import { RootState } from "../app/store";
 import { setMessage } from "./messageSlice";
 import { setLoader, unSetLoader } from "./loaderSlice";
-import { useHistory } from "react-router-dom";
 
 export interface IUser {
-  userId: string;
-  token: string;
-  userData?: IUserData;
+  _id?: string;
+  access_token?: string;
+  name: string;
+  email: string;
+  password?: string;
+  phone: string;
+  viber: string;
+  address: string;
+  alerts?: any[];
+  comments?: any[];
 }
 
 export interface IUserData {
+  access_token?: string;
   name: string;
   email: string;
   password?: string;
   phone: string;
   viber: string;
   address: string;
+  alerts?: any[];
+  comments?: any[];
 }
 export interface IUserCreateResponse {
-  token: string;
   _id: string;
+  access_token: string;
   name: string;
   email: string;
   password?: string;
   phone: string;
   viber: string;
   address: string;
+  alerts?: any[];
+  comments?: any[];
 }
 
 export interface IUserAction {
   type: string;
-  payload: {
-    _id: string;
-    token: string;
-    userData?: IUserData;
-  };
+  payload: IUserCreateResponse;
 }
 
 const initialState: IUser = {
-  userId: "",
-  token: "",
-  // userData: null,
+  access_token: "",
+  name: "",
+  email: "",
+  password: "",
+  phone: "",
+  viber: "",
+  address: "",
 };
+export const signinUser = createAsyncThunk(
+  "user/signinUser",
+  async function (user: any, { rejectWithValue, dispatch }) {
+    try {
+      dispatch(setLoader());
+
+      const response = await fetch(`${BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+      if (!response.ok) {
+        let errorMessage = await response.json();
+        throw new Error(errorMessage.message);
+      }
+      response.json().then((user) => {
+        dispatch(setCurrentUser(user));
+        dispatch(unSetLoader());
+        dispatch(
+          setMessage({
+            snackbarOpen: true,
+            snackbarType: "success",
+            snackbarMessage: "You successfully logged in!",
+          })
+        );
+      });
+    } catch (error) {
+      dispatch(
+        setMessage({
+          snackbarOpen: true,
+          snackbarType: "error",
+          snackbarMessage: error?.message,
+        })
+      );
+      dispatch(unSetLoader());
+    }
+  }
+);
 
 export const addNewUser = createAsyncThunk(
   "user/addNewUser",
@@ -65,18 +115,6 @@ export const addNewUser = createAsyncThunk(
         let errorMessage = await response.json();
         throw new Error(errorMessage.message);
       }
-      const data = (await response.json()) as IUserCreateResponse;
-      console.log("data :>> ", data);
-      const { password, ...rest } = data;
-      const { _id, token, ...userData } = rest;
-      console.log("password :>> ", password);
-      const currentUser: IUser = {
-        userId: _id,
-        token,
-        userData: { ...userData },
-      };
-
-      dispatch(setCurrentUser(currentUser));
       dispatch(unSetLoader());
       dispatch(
         setMessage({
@@ -86,8 +124,6 @@ export const addNewUser = createAsyncThunk(
         })
       );
     } catch (error) {
-      // return rejectWithValue(error.message);
-      // console.log("error :>> ", JSON.stringify(error));
       dispatch(
         setMessage({
           snackbarOpen: true,
@@ -104,8 +140,16 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setCurrentUser(state, action) {
-      state = action.payload;
+    setCurrentUser(state, action: IUserAction) {
+      state._id = action.payload._id;
+      state.access_token = action.payload.access_token;
+      state.address = action.payload.address;
+      state.alerts = action.payload.alerts;
+      state.comments = action.payload.comments;
+      state.email = action.payload.email;
+      state.name = action.payload.name;
+      state.phone = action.payload.phone;
+      state.viber = action.payload.viber;
     },
     unSetCurrentUser(state, action) {
       state = initialState;

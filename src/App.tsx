@@ -19,9 +19,6 @@ function App() {
   const isLoading = useAppSelector(
     (state: RootState) => state.loader.value.loading
   );
-  // const isLoading = useSelector(
-  //   (state: RootState) => state.loader.value.loading
-  // );
 
   return (
     <>

@@ -43,7 +43,7 @@ export const Alert = () => {
         },
       },
     });
-    // console.log("error=", error);
+
     if (error) {
       dispatch(
         setMessage({

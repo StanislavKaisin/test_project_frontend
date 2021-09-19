@@ -13,21 +13,22 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { signinUserSchema } from "../validation/signinUserSchema";
 import { setMessage } from "../redux/messageSlice";
 import { useDispatch } from "react-redux";
+import { addNewUser, signinUser } from "../redux/userSlice";
+import { useHistory } from "react-router";
 
 const theme = createTheme();
 
 export default function UserSignIn() {
   const dispatch = useDispatch();
+  const history = useHistory();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // console.log("data=", data);
     const user = {
       email: data.get("email"),
       password: data.get("password"),
     };
-    // console.log("user=", user);
 
     // eslint-disable-next-line no-console
     const { error } = signinUserSchema.validate(user, {
@@ -37,8 +38,8 @@ export default function UserSignIn() {
         },
       },
     });
-    console.log("error=", error);
-    if (error) {
+
+    if (error !== undefined) {
       dispatch(
         setMessage({
           snackbarOpen: true,
@@ -46,6 +47,13 @@ export default function UserSignIn() {
           snackbarMessage: error.details[0].message,
         })
       );
+    } else {
+      try {
+        dispatch(signinUser(user));
+        history.push("/user/signin");
+      } catch (error) {
+        //
+      }
     }
   };
 
