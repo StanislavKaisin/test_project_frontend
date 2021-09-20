@@ -61,7 +61,6 @@ export const signinUser = createAsyncThunk(
   async function (user: any, { rejectWithValue, dispatch }) {
     try {
       dispatch(setLoader());
-
       const response = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
@@ -73,17 +72,16 @@ export const signinUser = createAsyncThunk(
         let errorMessage = await response.json();
         throw new Error(errorMessage.message);
       }
-      response.json().then((user) => {
-        dispatch(setCurrentUser(user));
-        dispatch(unSetLoader());
-        dispatch(
-          setMessage({
-            snackbarOpen: true,
-            snackbarType: "success",
-            snackbarMessage: "You successfully logged in!",
-          })
-        );
-      });
+      const userFromDb = await response.json();
+      dispatch(setCurrentUser(userFromDb));
+      dispatch(unSetLoader());
+      dispatch(
+        setMessage({
+          snackbarOpen: true,
+          snackbarType: "success",
+          snackbarMessage: "You successfully logged in!",
+        })
+      );
     } catch (error) {
       dispatch(
         setMessage({

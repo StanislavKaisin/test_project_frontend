@@ -49,8 +49,12 @@ export default function UserSignIn() {
       );
     } else {
       try {
-        dispatch(signinUser(user));
-        history.push("/user/signin");
+        new Promise(async (resolve, reject) => {
+          await dispatch(signinUser(user));
+          resolve("ok");
+        }).then((data) => {
+          history.push("/");
+        });
       } catch (error) {
         //
       }

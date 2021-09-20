@@ -15,5 +15,5 @@ export const addAlertSchema = joi.object({
   //'+32 494 32 24 56'
   address: joi.string().allow(null, "").alphanum().min(10).max(100),
   // required for backend validation
-  // userId: joi.string().alphanum().required(),
+  userId: joi.string().alphanum().required(),
 });
