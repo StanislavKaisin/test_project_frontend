@@ -15,12 +15,32 @@ import { setMessage } from "../redux/messageSlice";
 import { useDispatch } from "react-redux";
 import { addNewUser, signinUser } from "../redux/userSlice";
 import { useHistory } from "react-router";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
+import { useEffect } from "react";
 
 const theme = createTheme();
 
 export default function UserSignIn() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const userFromStore = useAppSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("Pet!Alert", JSON.stringify(userFromStore));
+    } catch (error) {
+      if (error instanceof Error) {
+        dispatch(
+          setMessage({
+            snackbarOpen: true,
+            snackbarType: "error",
+            snackbarMessage: error.message,
+          })
+        );
+      }
+    }
+  }, [userFromStore]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -38,7 +58,6 @@ export default function UserSignIn() {
         },
       },
     });
-
     if (error !== undefined) {
       dispatch(
         setMessage({
@@ -51,12 +70,20 @@ export default function UserSignIn() {
       try {
         new Promise(async (resolve, reject) => {
           await dispatch(signinUser(user));
-          resolve("ok");
-        }).then((data) => {
+          resolve(user);
+        }).then((user) => {
           history.push("/");
         });
       } catch (error) {
-        //
+        if (error instanceof Error) {
+          dispatch(
+            setMessage({
+              snackbarOpen: true,
+              snackbarType: "error",
+              snackbarMessage: error.message,
+            })
+          );
+        }
       }
     }
   };

@@ -1,9 +1,16 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  getDefaultMiddleware,
+  Middleware,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { BASE_URL } from "../api/api.config";
 import { useAppDispatch } from "../app/hooks";
 import { RootState } from "../app/store";
 import { setMessage } from "./messageSlice";
 import { setLoader, unSetLoader } from "./loaderSlice";
+import { authMiddleware } from "./middleware/authMiddleware";
 
 export interface IUser {
   _id?: string;
@@ -156,5 +163,6 @@ const userSlice = createSlice({
 });
 
 const { setCurrentUser, unSetCurrentUser } = userSlice.actions;
+export const userActions = userSlice.actions;
 
 export default userSlice.reducer;

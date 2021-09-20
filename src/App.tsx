@@ -1,7 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Link, Route } from "react-router-dom";
-import logo from "./logo.svg";
-import { Counter } from "./features/counter/Counter";
 import "./App.css";
 import { HomePage } from "./pages/HomePage";
 import { User } from "./pages/User";
@@ -10,15 +8,37 @@ import UserSignUp from "./pages/UserSignUp";
 import UserSignIn from "./pages/UserSignIn";
 import { MessageSnackBar } from "./components/MessageSnackBar";
 import Loader from "./components/Loader";
-import { useAppSelector } from "./app/hooks";
-import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { RootState } from "./app/store";
 import MenuAppBar from "./components/MenuAppBar";
+import { setMessage } from "./redux/messageSlice";
+import { userActions } from "./redux/userSlice";
 
 function App() {
+  const dispatch = useAppDispatch();
   const isLoading = useAppSelector(
     (state: RootState) => state.loader.value.loading
   );
+  useEffect(() => {
+    try {
+      const userFromStorage = JSON.parse(
+        localStorage.getItem("Pet!Alert") as string
+      );
+      if (userFromStorage) {
+        dispatch(userActions.setCurrentUser(userFromStorage));
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        dispatch(
+          setMessage({
+            snackbarOpen: true,
+            snackbarType: "error",
+            snackbarMessage: error.message,
+          })
+        );
+      }
+    }
+  }, []);
 
   return (
     <>
