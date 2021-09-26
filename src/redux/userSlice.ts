@@ -1,16 +1,7 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  getDefaultMiddleware,
-  Middleware,
-  PayloadAction,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { BASE_URL } from "../api/api.config";
-import { useAppDispatch } from "../app/hooks";
-import { RootState } from "../app/store";
 import { setMessage } from "./messageSlice";
 import { setLoader, unSetLoader } from "./loaderSlice";
-import { authMiddleware } from "./middleware/authMiddleware";
 
 export interface IUser {
   _id?: string;
@@ -90,14 +81,16 @@ export const signinUser = createAsyncThunk(
         })
       );
     } catch (error) {
-      dispatch(
-        setMessage({
-          snackbarOpen: true,
-          snackbarType: "error",
-          snackbarMessage: error?.message,
-        })
-      );
-      dispatch(unSetLoader());
+      if (error instanceof Error) {
+        dispatch(
+          setMessage({
+            snackbarOpen: true,
+            snackbarType: "error",
+            snackbarMessage: error?.message,
+          })
+        );
+        dispatch(unSetLoader());
+      }
     }
   }
 );
@@ -129,14 +122,16 @@ export const addNewUser = createAsyncThunk(
         })
       );
     } catch (error) {
-      dispatch(
-        setMessage({
-          snackbarOpen: true,
-          snackbarType: "error",
-          snackbarMessage: error?.message,
-        })
-      );
-      dispatch(unSetLoader());
+      if (error instanceof Error) {
+        dispatch(
+          setMessage({
+            snackbarOpen: true,
+            snackbarType: "error",
+            snackbarMessage: error?.message,
+          })
+        );
+        dispatch(unSetLoader());
+      }
     }
   }
 );

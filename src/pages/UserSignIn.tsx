@@ -13,9 +13,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { signinUserSchema } from "../validation/signinUserSchema";
 import { setMessage } from "../redux/messageSlice";
 import { useDispatch } from "react-redux";
-import { addNewUser, signinUser } from "../redux/userSlice";
+import { signinUser } from "../redux/userSlice";
 import { useHistory } from "react-router";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
 import { useEffect } from "react";
 
@@ -49,8 +49,6 @@ export default function UserSignIn() {
       email: data.get("email"),
       password: data.get("password"),
     };
-
-    // eslint-disable-next-line no-console
     const { error } = signinUserSchema.validate(user, {
       errors: {
         wrap: {

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Link, Route } from "react-router-dom";
+import { BrowserRouter, Link, Redirect, Route, Switch } from "react-router-dom";
 import "./App.css";
 import { HomePage } from "./pages/HomePage";
 import { User } from "./pages/User";
@@ -8,11 +8,24 @@ import UserSignUp from "./pages/UserSignUp";
 import UserSignIn from "./pages/UserSignIn";
 import { MessageSnackBar } from "./components/MessageSnackBar";
 import Loader from "./components/Loader";
+import { makeStyles } from "@material-ui/styles";
+import Container from "@mui/material/Container";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { RootState } from "./app/store";
 import MenuAppBar from "./components/MenuAppBar";
 import { setMessage } from "./redux/messageSlice";
 import { userActions } from "./redux/userSlice";
+import { AlertPage } from "./pages/AlertPage";
+
+const useStyles = makeStyles(() => ({
+  caption: {
+    paddingTop: "0.5rem",
+    paddingRight: "1rem",
+    paddingBottom: "0.5rem",
+    paddingLeft: "1rem",
+    color: "#fafafa",
+  },
+}));
 
 function App() {
   const dispatch = useAppDispatch();
@@ -39,12 +52,15 @@ function App() {
       }
     }
   }, []);
+  const styles = useStyles();
 
   return (
     <>
-      <MenuAppBar />
-      <BrowserRouter>
-        <div>
+      <Container maxWidth="lg">
+        <MenuAppBar />
+      </Container>
+      <Container maxWidth="lg">
+        <BrowserRouter>
           <nav>
             <ul>
               <li>
@@ -67,16 +83,31 @@ function App() {
               </li>
             </ul>
           </nav>
-
-          <Route path="/" exact component={HomePage} />
-          <Route path="/user" exact component={User} />
-          <Route path="/user/signup" exact component={UserSignUp} />
-          <Route path="/user/signin" exact component={UserSignIn} />
-          <Route path="/alert" exact component={Alert} />
-        </div>
-      </BrowserRouter>
-      {isLoading ? <Loader /> : null}
-      <MessageSnackBar />
+          <Switch>
+            <Route exact path="/">
+              <HomePage />
+            </Route>
+            <Route exact path="/user">
+              <User />
+            </Route>
+            <Route path="/user/signup">
+              <UserSignUp />
+            </Route>
+            <Route path="/user/signin">
+              <UserSignIn />
+            </Route>
+            <Route exact path="/alert">
+              <Alert />
+            </Route>
+            <Route path="/alert/:alert">
+              <AlertPage />
+            </Route>
+            <Redirect from="/" to="/" />
+          </Switch>
+        </BrowserRouter>
+        {isLoading ? <Loader /> : null}
+        <MessageSnackBar />
+      </Container>
     </>
   );
 }
