@@ -16,6 +16,7 @@ import MenuAppBar from "./components/MenuAppBar";
 import { setMessage } from "./redux/messageSlice";
 import { userActions } from "./redux/userSlice";
 import { AlertPage } from "./pages/AlertPage";
+import { ResultsPage } from "./pages/ResultsPage";
 
 const useStyles = makeStyles(() => ({
   caption: {
@@ -59,6 +60,8 @@ function App() {
       <Container maxWidth="lg">
         <MenuAppBar />
       </Container>
+      {isLoading ? <Loader /> : null}
+      <MessageSnackBar />
       <Container maxWidth="lg">
         <BrowserRouter>
           <nav>
@@ -87,6 +90,9 @@ function App() {
             <Route exact path="/">
               <HomePage />
             </Route>
+            <Route exact path="/results">
+              <ResultsPage />
+            </Route>
             <Route exact path="/user">
               <User />
             </Route>
@@ -105,8 +111,8 @@ function App() {
             <Redirect from="/" to="/" />
           </Switch>
         </BrowserRouter>
-        {isLoading ? <Loader /> : null}
-        <MessageSnackBar />
+        {/* {isLoading ? <Loader /> : null}
+        <MessageSnackBar /> */}
       </Container>
     </>
   );

@@ -34,15 +34,28 @@ export const getAlerts = async function () {
   try {
     const response = await fetch(`${BASE_URL}/alerts`);
     if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error(response.statusText);
-      }
+      throw new Error(response.statusText);
     }
-    const alertFromDb = await response.json();
-    return alertFromDb;
+    const alertFromDbs = await response.json();
+    return alertFromDbs;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(error.message);
     }
   }
 };
+
+// export const searchAlerts = async function (query: string) {
+//   try {
+//     const response = await fetch(`${BASE_URL}/alerts/search?query=${query}`);
+//     if (!response.ok) {
+//       throw new Error(response.statusText);
+//     }
+//     const alertFromDbs = await response.json();
+//     return alertFromDbs;
+//   } catch (error) {
+//     if (error instanceof Error) {
+//       throw new Error(error.message);
+//     }
+//   }
+// };

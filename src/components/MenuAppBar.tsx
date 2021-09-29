@@ -48,7 +48,7 @@ export default function MenuAppBar() {
           label={auth ? "Logout" : "Login"}
         />
       </FormGroup>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ mb: 1 }}>
         <Toolbar>
           <IconButton
             size="large"
