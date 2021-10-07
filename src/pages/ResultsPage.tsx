@@ -6,7 +6,6 @@ import { RootState } from "../app/store";
 import { fetchSearchResults } from "../redux/searchSlice";
 
 const header = (query: string) => {
-  // if (query === "") return `All alerts`;
   return `Results ${query}:`;
 };
 
@@ -16,7 +15,6 @@ export const ResultsPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // if query '' and results null fetch all alerts
     if (query === "" && results === null) {
       dispatch(fetchSearchResults({ alert: "" }));
     }

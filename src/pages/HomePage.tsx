@@ -5,7 +5,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
-import { createStyles, makeStyles } from "@mui/styles";
 import React, { useEffect, useRef, useState } from "react";
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -49,7 +48,6 @@ export const HomePage = () => {
         dispatch(unSetLoader());
       })
       .catch((error) => {
-        // console.log(`error`, error);
         dispatch(
           setMessage({
             snackbarOpen: true,
@@ -65,7 +63,6 @@ export const HomePage = () => {
   }, []);
   return (
     <div>
-      Home Page
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -100,7 +97,7 @@ export const HomePage = () => {
           sx={{ mt: 1, mb: 1, flexShrink: 1, width: matches ? "25%" : "100%" }}
           startIcon={<SearchIcon fontSize="large" />}
         >
-          Search alert
+          Search
         </Button>
       </Box>
       {alerts && <AlertsList data={alerts} />}

@@ -26,24 +26,30 @@ const Input = styled("input")({
   display: "none",
 });
 
-export const Alert = () => {
+export const AddAlertPage = () => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state: RootState) => state.user);
   const userId = useAppSelector((state: RootState) => state.user._id);
   const userPhone = useAppSelector((state: RootState) => state.user.phone);
   const [file, setfile] = useState<File | null>(null);
   const history = useHistory();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!userId) {
+  useEffect(() => {
+    if (!user.access_token) {
       dispatch(
         setMessage({
           snackbarOpen: true,
-          snackbarType: "error",
-          snackbarMessage: "Please sign in to create alert!",
+          snackbarType: "warning",
+          snackbarMessage: "Please sign in to add alert",
         })
       );
+      history.push("user/signin");
     }
+  }, []);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     const data = new FormData(event.currentTarget);
     data.append("file", file as Blob);
     data.append("owner", userId as string);
@@ -119,7 +125,7 @@ export const Alert = () => {
           }}
         >
           <Typography component="h1" variant="h5">
-            Alert!
+            Alert it!
           </Typography>
           <Box
             component="form"
@@ -224,5 +230,3 @@ export const Alert = () => {
     </ThemeProvider>
   );
 };
-
-// eslint-disable-next-line no-console

@@ -1,4 +1,5 @@
 import { BASE_URL } from "./api.config";
+const axios = require("axios").default;
 
 export const createAlert = async function (alert: any) {
   const response = await fetch(`${BASE_URL}/alerts`, {
@@ -15,14 +16,8 @@ export const createAlert = async function (alert: any) {
 
 export const getAlert = async function (id: string) {
   try {
-    const response = await fetch(`${BASE_URL}/alerts/${id}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error(response.statusText);
-      }
-    }
-    const alertFromDb = await response.json();
-    return alertFromDb;
+    const response = await axios(`${BASE_URL}/alerts/${id}`);
+    return response.data[0];
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(error.message);
@@ -32,12 +27,8 @@ export const getAlert = async function (id: string) {
 
 export const getAlerts = async function () {
   try {
-    const response = await fetch(`${BASE_URL}/alerts`);
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    const alertFromDbs = await response.json();
-    return alertFromDbs;
+    const response = await axios(`${BASE_URL}/alerts`);
+    return response.data;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(error.message);
@@ -45,17 +36,13 @@ export const getAlerts = async function () {
   }
 };
 
-// export const searchAlerts = async function (query: string) {
-//   try {
-//     const response = await fetch(`${BASE_URL}/alerts/search?query=${query}`);
-//     if (!response.ok) {
-//       throw new Error(response.statusText);
-//     }
-//     const alertFromDbs = await response.json();
-//     return alertFromDbs;
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(error.message);
-//     }
-//   }
-// };
+export const getUserAlerts = async function (owner: any) {
+  try {
+    const response = await axios.post(`${BASE_URL}/alerts/user`, owner);
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+};

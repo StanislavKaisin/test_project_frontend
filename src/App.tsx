@@ -1,34 +1,69 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Link, Redirect, Route, Switch } from "react-router-dom";
 import "./App.css";
-import { HomePage } from "./pages/HomePage";
-import { User } from "./pages/User";
-import { Alert } from "./pages/Alert";
+import { BrowserRouter, Link, Redirect, Route, Switch } from "react-router-dom";
+import Container from "@mui/material/Container";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import useScrollTrigger from "@mui/material/useScrollTrigger";
+import Box from "@mui/material/Box";
+import Zoom from "@mui/material/Zoom";
+import Fab from "@mui/material/Fab";
+import { useTheme, useMediaQuery } from "@material-ui/core";
 import UserSignUp from "./pages/UserSignUp";
 import UserSignIn from "./pages/UserSignIn";
-import { MessageSnackBar } from "./components/MessageSnackBar";
-import Loader from "./components/Loader";
-import { makeStyles } from "@material-ui/styles";
-import Container from "@mui/material/Container";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { RootState } from "./app/store";
 import MenuAppBar from "./components/MenuAppBar";
+import Loader from "./components/Loader";
+import { MessageSnackBar } from "./components/MessageSnackBar";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { setMessage } from "./redux/messageSlice";
-import { userActions } from "./redux/userSlice";
-import { AlertPage } from "./pages/AlertPage";
+import { HomePage } from "./pages/HomePage";
 import { ResultsPage } from "./pages/ResultsPage";
+import { UserPage } from "./pages/UserPage";
+import { AddAlertPage } from "./pages/AddAlertPage";
+import { AlertPage } from "./pages/AlertPage";
+import { RootState } from "./app/store";
+import { UserUpdatePage } from "./pages/UserUpdatePage";
+import { userActions } from "./redux/userSlice";
 
-const useStyles = makeStyles(() => ({
-  caption: {
-    paddingTop: "0.5rem",
-    paddingRight: "1rem",
-    paddingBottom: "0.5rem",
-    paddingLeft: "1rem",
-    color: "#fafafa",
-  },
-}));
+interface IScrollTopProps {
+  window?: () => Window;
+  children?: React.ReactElement;
+}
 
-function App() {
+function ScrollTop(props: IScrollTopProps) {
+  const { children, window } = props;
+  const trigger = useScrollTrigger({
+    target: window ? window() : undefined,
+    disableHysteresis: true,
+    threshold: 100,
+  });
+
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const anchor = (
+      (event.target as HTMLDivElement).ownerDocument || document
+    ).querySelector("#back-to-top-anchor");
+
+    if (anchor) {
+      anchor.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  };
+
+  return (
+    <Zoom in={trigger}>
+      <Box
+        onClick={handleClick}
+        role="presentation"
+        sx={{ position: "fixed", bottom: 16, right: 16 }}
+      >
+        {children}
+      </Box>
+    </Zoom>
+  );
+}
+
+function App(props: IScrollTopProps) {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector(
     (state: RootState) => state.loader.value.loading
@@ -53,7 +88,10 @@ function App() {
       }
     }
   }, []);
-  const styles = useStyles();
+
+  const theme = useTheme();
+  const larger = useMediaQuery(theme.breakpoints.down("sm"));
+  const arrowSize = larger ? "small" : "large";
 
   return (
     <>
@@ -62,60 +100,73 @@ function App() {
       </Container>
       {isLoading ? <Loader /> : null}
       <MessageSnackBar />
-      <Container maxWidth="lg">
-        <BrowserRouter>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/results">Results</Link>
-              </li>
-              <li>
-                <Link to="/user">User Profile</Link>
-              </li>
-              <li>
-                <Link to="/user/signup">User SignUp</Link>
-              </li>
-              <li>
-                <Link to="/user/signin">User SignIn</Link>
-              </li>
-              <li>
-                <Link to="/alert">Alert</Link>
-              </li>
-            </ul>
-          </nav>
-          <Switch>
-            <Route exact path="/">
-              <HomePage />
-            </Route>
-            <Route exact path="/results">
-              <ResultsPage />
-            </Route>
-            <Route exact path="/user">
-              <User />
-            </Route>
-            <Route path="/user/signup">
-              <UserSignUp />
-            </Route>
-            <Route path="/user/signin">
-              <UserSignIn />
-            </Route>
-            <Route exact path="/alert">
-              <Alert />
-            </Route>
-            <Route path="/alert/:alert">
-              <AlertPage />
-            </Route>
-            <Redirect from="/" to="/" />
-          </Switch>
-        </BrowserRouter>
-        {/* {isLoading ? <Loader /> : null}
-        <MessageSnackBar /> */}
+      <Container maxWidth="lg" sx={{ mt: 10 }}>
+        {/* <TestNavigation /> */}
+        <Switch>
+          <Route exact path="/">
+            <HomePage />
+          </Route>
+          <Route exact path="/results">
+            <ResultsPage />
+          </Route>
+          <Route exact path="/user">
+            <UserPage />
+          </Route>
+          <Route path="/user/signup">
+            <UserSignUp />
+          </Route>
+          <Route path="/user/signin">
+            <UserSignIn />
+          </Route>
+          <Route path="/user/update">
+            <UserUpdatePage />
+          </Route>
+          <Route exact path="/alert">
+            <AddAlertPage />
+          </Route>
+          <Route path="/alert/:alert">
+            <AlertPage />
+          </Route>
+          <Redirect from="/" to="/" />
+        </Switch>
       </Container>
+      <ScrollTop {...props}>
+        <Fab color="secondary" size={arrowSize} aria-label="scroll back to top">
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </ScrollTop>
     </>
   );
 }
 
 export default App;
+
+const TestNavigation = () => {
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/results">Results</Link>
+        </li>
+        <li>
+          <Link to="/user">User Profile</Link>
+        </li>
+        <li>
+          <Link to="/user/signup">User SignUp</Link>
+        </li>
+        <li>
+          <Link to="/user/signin">User SignIn</Link>
+        </li>
+        <li>
+          <Link to="/user/update">User Update</Link>
+        </li>
+        <li>
+          <Link to="/alert">Alert</Link>
+        </li>
+      </ul>
+    </nav>
+  );
+};

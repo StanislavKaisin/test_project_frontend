@@ -3,6 +3,7 @@ import { BASE_URL } from "../api/api.config";
 import { IAlertProps } from "../pages/AlertPage";
 import { setLoader, unSetLoader } from "./loaderSlice";
 import { setMessage } from "./messageSlice";
+const axios = require("axios").default;
 
 interface ISearchAlertResponse {
   docs: IAlertProps[];
@@ -42,16 +43,12 @@ export const fetchSearchResults = createAsyncThunk(
   async function (query: IfetchAlerts, { rejectWithValue, dispatch }) {
     dispatch(setLoader());
     try {
-      const response = await fetch(
+      const response = await axios(
         `${BASE_URL}/alerts/search?query=${query.alert}&page=${
           query.pageNumber ? query.pageNumber : 1
         }`
       );
-      if (!response.ok) {
-        let errorMessage = await response.json();
-        throw new Error(errorMessage.message);
-      }
-      const alertFromDbs = await response.json();
+      const alertFromDbs = response.data;
       dispatch(setSearch({ query: query.alert, results: alertFromDbs }));
       dispatch(unSetLoader());
     } catch (error) {
