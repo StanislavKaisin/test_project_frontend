@@ -1,13 +1,10 @@
 import * as React from "react";
-import { createTheme } from "@mui/material/styles";
 import { createUserSchema } from "../validation/createUserSchema";
 import { setMessage } from "../redux/messageSlice";
 import { useAppDispatch } from "../app/hooks";
 import { addNewUser } from "../redux/userSlice";
 import { useHistory } from "react-router";
 import { UserDataForm } from "../components/UserDataForm";
-
-const theme = createTheme();
 
 export default function UserSignUp() {
   const dispatch = useAppDispatch();

@@ -65,24 +65,25 @@ export default function UserSignIn() {
         })
       );
     } else {
-      try {
-        new Promise(async (resolve, reject) => {
-          await dispatch(signinUser(user));
-          resolve(user);
-        }).then((user) => {
-          history.push("/");
-        });
-      } catch (error) {
-        if (error instanceof Error) {
-          dispatch(
-            setMessage({
-              snackbarOpen: true,
-              snackbarType: "error",
-              snackbarMessage: error.message,
-            })
-          );
+      new Promise<void>(async (resolve, reject) => {
+        dispatch(signinUser(user));
+        resolve();
+      }).then(() => {
+        try {
+          localStorage.setItem("Pet!Alert", JSON.stringify(userFromStore));
+        } catch (error) {
+          if (error instanceof Error) {
+            dispatch(
+              setMessage({
+                snackbarOpen: true,
+                snackbarType: "error",
+                snackbarMessage: error.message,
+              })
+            );
+          }
         }
-      }
+        history.push("/");
+      });
     }
   };
 

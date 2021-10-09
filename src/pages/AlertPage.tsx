@@ -13,8 +13,6 @@ import { BASE_URL } from "../api/api.config";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { setLoader, unSetLoader } from "../redux/loaderSlice";
 import { setMessage } from "../redux/messageSlice";
-import Image from "material-ui-image";
-import { transform } from "typescript";
 import AddComment from "../components/AddComment";
 import { getAlertComments } from "../api/comment";
 import { RootState } from "../app/store";
@@ -178,8 +176,24 @@ export const AlertPage = () => {
                   <Typography
                     variant="caption"
                     component="a"
-                    href={`tel:${alert.viber}`}
-                  >{`${alert.viber}`}</Typography>
+                    href={`tel:${alert.viber ? alert.viber : ""}`}
+                  >{`${alert.viber ? alert.viber : ""}`}</Typography>
+                </Grid>
+              </Grid>
+              <Divider variant="middle" />
+              <Grid container sx={{ paddingLeft: "1rem" }}>
+                <Grid item xs={12} sm={6}>
+                  <Typography
+                    variant="caption"
+                    component="p"
+                  >{` Phone:`}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Typography
+                    variant="caption"
+                    component="a"
+                    href={`tel:${alert.phone}`}
+                  >{`${alert.phone}`}</Typography>
                 </Grid>
               </Grid>
               <Divider variant="middle" />

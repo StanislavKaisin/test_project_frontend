@@ -21,7 +21,7 @@ import { CommentsList } from "../components/CommentsList";
 import { setLoader, unSetLoader } from "../redux/loaderSlice";
 import { setMessage } from "../redux/messageSlice";
 import { getUserComments } from "../api/comment";
-import unSetCurrentUser from "../redux/userSlice";
+import { IUserCreateResponse, logout } from "../redux/userSlice";
 
 export const UserPage = () => {
   const user = useAppSelector((state: RootState) => state.user);
@@ -76,16 +76,9 @@ export const UserPage = () => {
     }
   };
   const handleLogOut = async () => {
-    new Promise(async (resolve, reject) => {
-      unSetCurrentUser(user, {
-        type: "user",
-        payload: user,
-      });
-      localStorage.removeItem("Pet!Alert");
-      resolve(user);
-    }).then((user) => {
-      history.push("/");
-    });
+    dispatch(logout(user as IUserCreateResponse));
+    localStorage.removeItem("Pet!Alert");
+    history.push("/");
   };
 
   const theme = useTheme();

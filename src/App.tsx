@@ -68,6 +68,7 @@ function App(props: IScrollTopProps) {
   const isLoading = useAppSelector(
     (state: RootState) => state.loader.value.loading
   );
+  const userFromStore = useAppSelector((state: RootState) => state.user);
   useEffect(() => {
     try {
       const userFromStorage = JSON.parse(
@@ -88,6 +89,21 @@ function App(props: IScrollTopProps) {
       }
     }
   }, []);
+  useEffect(() => {
+    try {
+      localStorage.setItem("Pet!Alert", JSON.stringify(userFromStore));
+    } catch (error) {
+      if (error instanceof Error) {
+        dispatch(
+          setMessage({
+            snackbarOpen: true,
+            snackbarType: "error",
+            snackbarMessage: error.message,
+          })
+        );
+      }
+    }
+  }, [userFromStore]);
 
   const theme = useTheme();
   const larger = useMediaQuery(theme.breakpoints.down("sm"));

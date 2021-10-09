@@ -6,7 +6,7 @@ import { RootState } from "../app/store";
 import { fetchSearchResults } from "../redux/searchSlice";
 
 const header = (query: string) => {
-  return `Results ${query}:`;
+  return `Serach results ${query}:`;
 };
 
 export const ResultsPage = () => {

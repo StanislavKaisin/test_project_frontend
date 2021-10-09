@@ -6,7 +6,6 @@ import { useHistory } from "react-router-dom";
 import { BottomNavigation, BottomNavigationAction } from "@material-ui/core";
 
 export default function MenuAppBar() {
-  // const isAuth = useAppSelector((state: RootState) => state.user.access_token);
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {

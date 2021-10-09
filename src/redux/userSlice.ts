@@ -165,6 +165,10 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+export const logout = (user: IUserCreateResponse) => {
+  return unSetCurrentUser(user);
+};
+
 const userSlice = createSlice({
   name: "user",
   initialState,
