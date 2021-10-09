@@ -16,6 +16,7 @@ import { setMessage } from "../redux/messageSlice";
 import AddComment from "../components/AddComment";
 import { getAlertComments } from "../api/comment";
 import { RootState } from "../app/store";
+import QRCode from "react-qr-code";
 
 interface IUser {
   name: string;
@@ -123,6 +124,10 @@ export const AlertPage = () => {
 
   const photo = alert?.img ? `${BASE_URL}/${alert.img}` : defaultImg;
 
+  const fullPagePath = window.location.href;
+  // const fullPagePath = `http://192.168.0.102:3001/${history.location.pathname}`;
+  // console.log("fullPagePath :>> ", fullPagePath);
+
   return (
     <>
       {alert && (
@@ -226,9 +231,30 @@ export const AlertPage = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item sx={{ mb: 2 }} alignContent="center">
+            <Divider />
+            {/* next lines will work correctly only when server and frontend apps run in production */}
+            <Grid
+              item
+              alignContent="center"
+              sx={{
+                mt: 1,
+                mb: 1,
+              }}
+            >
+              <div
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                <QRCode value={fullPagePath} size={128} />
+              </div>
+            </Grid>
+            <Divider />
+
+            <Grid item sx={{ mb: 2, mt: 2 }} alignContent="center">
               <AddComment cb={handleAddComment} />
             </Grid>
+
             <Divider />
             {comments &&
               comments.length > 0 &&
