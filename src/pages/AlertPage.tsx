@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  Button,
   Container,
   Divider,
   Grid,
@@ -17,6 +18,8 @@ import AddComment from "../components/AddComment";
 import { getAlertComments } from "../api/comment";
 import { RootState } from "../app/store";
 import QRCode from "react-qr-code";
+import ReactToPrint, { useReactToPrint } from "react-to-print";
+import { AlertPageToPrint } from "./AlertPageToPrint";
 
 interface IUser {
   name: string;
@@ -35,6 +38,7 @@ export interface IAlertProps {
   description: string;
   phone: string;
   viber: string;
+  qr?: string;
 }
 
 export interface IComments {
@@ -71,7 +75,6 @@ export const AlertPage = () => {
       .finally(() => {
         dispatch(unSetLoader());
       });
-
     getAlertComments(id)
       .then((data) => {
         setComments(data);
@@ -126,7 +129,15 @@ export const AlertPage = () => {
 
   const fullPagePath = window.location.href;
   // const fullPagePath = `http://192.168.0.102:3001/${history.location.pathname}`;
-  // console.log("fullPagePath :>> ", fullPagePath);
+
+  if (fullPagePath && alert) {
+    alert["qr"] = fullPagePath;
+  }
+  const componentRef = useRef<HTMLDivElement>(null);
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   return (
     <>
@@ -134,7 +145,7 @@ export const AlertPage = () => {
         <Container maxWidth="lg">
           <Paper>
             <Grid container direction="column">
-              <Typography variant="h3" component="h1" align="center">
+              <Typography variant="h4" component="h1" align="center">
                 {alert.title}
               </Typography>
               <ImageListItem key={8} sx={{ margin: "0 auto" }}>
@@ -249,12 +260,28 @@ export const AlertPage = () => {
                 <QRCode value={fullPagePath} size={128} />
               </div>
             </Grid>
+
             <Divider />
-
-            <Grid item sx={{ mb: 2, mt: 2 }} alignContent="center">
-              <AddComment cb={handleAddComment} />
+            <Grid container sx={{ mb: 2, mt: 2 }} spacing={2}>
+              <Grid item alignContent="center" xs={12} sm={6}>
+                <AddComment cb={handleAddComment} />
+              </Grid>
+              <Grid item alignContent="center" xs={12} sm={6}>
+                <Button fullWidth variant="outlined" onClick={handlePrint}>
+                  Print alert
+                </Button>
+                <div style={{ display: "none" }}>
+                  {/* @ts-ignore */}
+                  <AlertPageToPrint alert={alert} ref={componentRef} />
+                </div>
+              </Grid>
             </Grid>
-
+            <Divider />
+            <Typography
+              sx={{ ml: 2, fontSize: "1.2rem", fontWeight: "bold" }}
+              variant="caption"
+              component="p"
+            >{`Comments: `}</Typography>
             <Divider />
             {comments &&
               comments.length > 0 &&

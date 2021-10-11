@@ -49,9 +49,10 @@ export const CommentsList = (props: ICommentsListProps) => {
                   >
                     <ListItemButton>
                       <ListItemText
-                        primary={`Title: ${
-                          item.title
-                        } | Description: ${cutDescription(
+                        primary={`Title: ${cutDescription(
+                          item.title,
+                          10
+                        )} | Description: ${cutDescription(
                           item.description,
                           10
                         )}`}

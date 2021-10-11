@@ -81,7 +81,7 @@ export const AlertsList = (props: { data: IAlertsListProps }) => {
                   />
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Title: {card.title}
+                      Title: {cutDescription(card.title, 25)}
                     </Typography>
                     <Typography
                       variant="caption"
