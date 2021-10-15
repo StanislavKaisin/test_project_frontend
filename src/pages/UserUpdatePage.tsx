@@ -25,12 +25,12 @@ export const UserUpdatePage = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const userToUpdate = {
-      name: data.get("name"),
-      email: data.get("email"),
-      password: data.get("password"),
-      phone: data.get("phone"),
-      viber: data.get("viber"),
-      address: data.get("address"),
+      name: (data.get("name") as string).trim(),
+      email: (data.get("email") as string).trim(),
+      password: (data.get("password") as string).trim(),
+      phone: (data.get("phone") as string).trim(),
+      viber: (data.get("viber") as string).trim(),
+      address: (data.get("address") as string).trim(),
     };
     const { error } = updateUserSchema.validate(userToUpdate, {
       errors: {

@@ -46,8 +46,8 @@ export default function UserSignIn() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const user = {
-      email: data.get("email"),
-      password: data.get("password"),
+      email: (data.get("email") as string).trim(),
+      password: (data.get("password") as string).trim(),
     };
     const { error } = signinUserSchema.validate(user, {
       errors: {

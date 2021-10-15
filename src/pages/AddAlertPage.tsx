@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Checkbox,
   Container,
   createTheme,
   CssBaseline,
+  FormControlLabel,
   Grid,
   TextField,
   ThemeProvider,
   Typography,
+  useTheme,
 } from "@material-ui/core";
 import { styled } from "@mui/material/styles";
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import Favorite from "@mui/icons-material/Favorite";
 import { MessageSnackBar } from "../components/MessageSnackBar";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { setMessage } from "../redux/messageSlice";
@@ -49,7 +54,6 @@ export const AddAlertPage = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const data = new FormData(event.currentTarget);
     data.append("file", file as Blob);
     data.append("owner", userId as string);
@@ -62,7 +66,11 @@ export const AddAlertPage = () => {
       address: data.get("address"),
       owner: userId,
       file: file,
+      searchForOwner: data.get("searchForOwner"),
     };
+    const searchForOwnerCheckbox = document.getElementById("searchForOwner");
+    alert.searchForOwner = (searchForOwnerCheckbox as HTMLInputElement)
+      .checked as any;
 
     // validate alert as data is not an object
     const { error } = addAlertSchema.validate(alert, {
@@ -72,6 +80,13 @@ export const AddAlertPage = () => {
         },
       },
     });
+
+    data.set("title", (alert.title as string).trim());
+    data.set("description", (alert.description as string).trim());
+    data.set("phone", (alert.phone as string).trim());
+    data.set("viber", (alert.viber as string).trim());
+    data.set("address", (alert.address as string).trim());
+    data.set("searchForOwner", alert.searchForOwner as any);
 
     if (error) {
       dispatch(
@@ -111,6 +126,11 @@ export const AddAlertPage = () => {
       }
     }
   };
+
+  const checkboxLabel = {
+    inputProps: { "aria-label": "Searching For Owner!" },
+  };
+  const theme = useTheme();
 
   return (
     <ThemeProvider theme={theme}>
@@ -212,6 +232,32 @@ export const AddAlertPage = () => {
                     Upload
                   </Button>
                 </label>
+              </Grid>
+              <Grid item container xs={12} justifyContent="center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="searchForOwner"
+                      id="searchForOwner"
+                      {...checkboxLabel}
+                      icon={<FavoriteBorder />}
+                      checkedIcon={<Favorite />}
+                      inputProps={{ "aria-label": "controlled" }}
+                      sx={{
+                        color: theme.palette.error.light,
+                        "&.Mui-checked": {
+                          color: theme.palette.error.light,
+                        },
+                      }}
+                    />
+                  }
+                  label="Searching For Owner!"
+                  labelPlacement="end"
+                  sx={{
+                    color: theme.palette.error.light,
+                    alignContent: "center",
+                  }}
+                />
               </Grid>
             </Grid>
 

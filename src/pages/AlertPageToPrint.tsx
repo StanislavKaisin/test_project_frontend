@@ -98,6 +98,23 @@ export const AlertPageToPrint = React.forwardRef<
                 No photo
               </div>
             )}
+            {alert?.searchForOwner == true && (
+              <Grid
+                container
+                direction="row"
+                alignContent="center"
+                justifyContent="center"
+                sx={{
+                  alignItems: "center",
+                  textShadow: "1px 1px 2px",
+                }}
+              >
+                <Typography
+                  variant="caption"
+                  component="p"
+                >{`Searching for owner!`}</Typography>
+              </Grid>
+            )}
             <Typography
               variant="h6"
               component="p"

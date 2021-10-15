@@ -72,7 +72,7 @@ export const signinUser = createAsyncThunk(
           snackbarMessage: "You successfully logged in!",
         })
       );
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof Error) {
         dispatch(
           setMessage({
@@ -111,7 +111,7 @@ export const addNewUser = createAsyncThunk(
           snackbarMessage: "User successfully created!",
         })
       );
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof Error) {
         dispatch(
           setMessage({

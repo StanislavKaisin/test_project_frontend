@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Card,
   CardContent,
@@ -9,7 +10,6 @@ import {
   useTheme,
   useMediaQuery,
 } from "@material-ui/core";
-import React from "react";
 import { useHistory } from "react-router";
 import { BASE_URL } from "../api/api.config";
 import { IAlertProps } from "../pages/AlertPage";
@@ -17,6 +17,7 @@ import Pagination from "@mui/material/Pagination";
 import { useAppDispatch } from "../app/hooks";
 import { fetchSearchResults } from "../redux/searchSlice";
 import { cutDescription } from "../helpers/cutDescription";
+import Favorite from "@mui/icons-material/Favorite";
 
 interface ISearchAlertProps {
   docs: IAlertProps[];
@@ -58,59 +59,85 @@ export const AlertsList = (props: { data: IAlertsListProps }) => {
 
   return (
     <Container sx={{ py: 8 }} maxWidth="md">
-      <Grid container spacing={4}>
-        {cards &&
-          cards.map((card) => (
-            <Grid item key={card._id} xs={12} sm={6} md={4}>
-              <Card
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <CardActionArea
-                  onClick={() => {
-                    history.push(`/alert/${card._id}`);
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    sx={{}}
-                    image={card.img ? `${BASE_URL}/${card.img}` : defaultImg}
-                    alt={card.title}
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Title: {cutDescription(card.title, 25)}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      component="p"
-                    >{`Number of views: ${card.numberOfViews}`}</Typography>
-                    <Typography>
-                      Description: {cutDescription(card.description, 25)}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-          ))}
-      </Grid>
-      <Grid container justifyContent="center" sx={{ mt: 3 }}>
-        {(props.data as ISearchAlertProps).docs && (
-          <Pagination
-            count={(props.data as ISearchAlertProps).totalPages}
-            variant="outlined"
-            shape="rounded"
-            size={paginationSize}
-            siblingCount={0}
-            page={page}
-            onChange={handleChange}
-            showFirstButton
-            showLastButton
-          />
-        )}
-      </Grid>
+      {cards.length ? (
+        <>
+          <Grid container spacing={4}>
+            {cards &&
+              cards.map((card) => (
+                <Grid item key={card._id} xs={12} sm={6} md={4}>
+                  <Card
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <CardActionArea
+                      onClick={() => {
+                        history.push(`/alert/${card._id}`);
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        sx={{}}
+                        image={
+                          card.img ? `${BASE_URL}/${card.img}` : defaultImg
+                        }
+                        alt={card.title}
+                      />
+                      <CardContent sx={{ flexGrow: 1 }}>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          Title: {cutDescription(card.title, 25)}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          component="p"
+                        >{`Number of views: ${card.numberOfViews}`}</Typography>
+                        {card?.searchForOwner == true && (
+                          <Grid
+                            container
+                            direction="row"
+                            alignContent="center"
+                            sx={{
+                              alignItems: "center",
+                              color: theme.palette.error.light,
+                              textShadow: "1px 1px 2px",
+                            }}
+                          >
+                            <Favorite />
+                            <Typography
+                              variant="caption"
+                              component="p"
+                            >{`Searching for owner!`}</Typography>
+                          </Grid>
+                        )}
+                        <Typography>
+                          Description: {cutDescription(card.description, 25)}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Grid>
+              ))}
+          </Grid>
+          <Grid container justifyContent="center" sx={{ mt: 3 }}>
+            {(props.data as ISearchAlertProps).docs && (
+              <Pagination
+                count={(props.data as ISearchAlertProps).totalPages}
+                variant="outlined"
+                shape="rounded"
+                size={paginationSize}
+                siblingCount={0}
+                page={page}
+                onChange={handleChange}
+                showFirstButton
+                showLastButton
+              />
+            )}
+          </Grid>
+        </>
+      ) : (
+        <Typography variant="h6" component="p">{`Not found`}</Typography>
+      )}
     </Container>
   );
 };
