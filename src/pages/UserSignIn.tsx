@@ -13,14 +13,34 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { signinUserSchema } from "../validation/signinUserSchema";
 import { setMessage } from "../redux/messageSlice";
 import { useDispatch } from "react-redux";
-import { addNewUser, signinUser } from "../redux/userSlice";
+import { signinUser } from "../redux/userSlice";
 import { useHistory } from "react-router";
+import { useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
+import { useEffect } from "react";
 
 const theme = createTheme();
 
 export default function UserSignIn() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const userFromStore = useAppSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("Pet!Alert", JSON.stringify(userFromStore));
+    } catch (error) {
+      if (error instanceof Error) {
+        dispatch(
+          setMessage({
+            snackbarOpen: true,
+            snackbarType: "error",
+            snackbarMessage: error.message,
+          })
+        );
+      }
+    }
+  }, [userFromStore]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -29,8 +49,6 @@ export default function UserSignIn() {
       email: data.get("email"),
       password: data.get("password"),
     };
-
-    // eslint-disable-next-line no-console
     const { error } = signinUserSchema.validate(user, {
       errors: {
         wrap: {
@@ -38,7 +56,6 @@ export default function UserSignIn() {
         },
       },
     });
-
     if (error !== undefined) {
       dispatch(
         setMessage({
@@ -48,12 +65,25 @@ export default function UserSignIn() {
         })
       );
     } else {
-      try {
+      new Promise<void>(async (resolve, reject) => {
         dispatch(signinUser(user));
-        history.push("/user/signin");
-      } catch (error) {
-        //
-      }
+        resolve();
+      }).then(() => {
+        try {
+          localStorage.setItem("Pet!Alert", JSON.stringify(userFromStore));
+        } catch (error) {
+          if (error instanceof Error) {
+            dispatch(
+              setMessage({
+                snackbarOpen: true,
+                snackbarType: "error",
+                snackbarMessage: error.message,
+              })
+            );
+          }
+        }
+        history.push("/");
+      });
     }
   };
 
