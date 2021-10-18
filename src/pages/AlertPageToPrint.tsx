@@ -17,6 +17,7 @@ interface IshortInfo {
   phone: string;
   viber: string;
   qr: string;
+  searchForOwner: boolean;
 }
 
 export const AlertPageToPrint = React.forwardRef<
@@ -33,10 +34,13 @@ export const AlertPageToPrint = React.forwardRef<
   const shortInfo: IshortInfo = {
     title: alert?.title as string,
     description: cutDescription(alert?.description!, 10),
-    name: alert?.user[0].name as string,
+    name: alert?.user.length
+      ? (alert?.user[0].name as string)
+      : "User not found",
     phone: alert?.phone as string,
     viber: alert?.viber as string,
     qr: fullPagePath as string,
+    searchForOwner: alert?.searchForOwner as boolean,
   };
   const shortInfos: IshortInfo[] = [];
   shortInfos.length = 8;
@@ -63,7 +67,7 @@ export const AlertPageToPrint = React.forwardRef<
               align="center"
               style={{ fontWeight: "bold" }}
             >
-              {cutDescription(alert.title, 40)}
+              {cutDescription(shortInfo.title, 40)}
             </Typography>
             {photo ? (
               <ImageListItem
@@ -76,7 +80,7 @@ export const AlertPageToPrint = React.forwardRef<
                   src={photo}
                   width="360"
                   height="250"
-                  alt={alert.title}
+                  alt={shortInfo.title}
                   loading="lazy"
                   style={{
                     height: "115mm",
@@ -98,7 +102,7 @@ export const AlertPageToPrint = React.forwardRef<
                 No photo
               </div>
             )}
-            {alert?.searchForOwner == true && (
+            {shortInfo?.searchForOwner == true && (
               <Grid
                 container
                 direction="row"
@@ -126,7 +130,7 @@ export const AlertPageToPrint = React.forwardRef<
                 lineHeight: "1rem",
               }}
             >
-              {cutDescription(alert.description, 600)}
+              {cutDescription(shortInfo.description, 600)}
             </Typography>
             {fullPagePath && (
               <Grid
@@ -152,7 +156,7 @@ export const AlertPageToPrint = React.forwardRef<
                 <Typography
                   variant="h6"
                   component="p"
-                >{`Please, call me, ${alert.user[0].name}, if you find: `}</Typography>
+                >{`Please, call me, ${shortInfo.name}, if you find: `}</Typography>
               </Grid>
             </Grid>
             <Grid container sx={{ paddingLeft: "1rem" }} direction="row">
@@ -163,8 +167,8 @@ export const AlertPageToPrint = React.forwardRef<
                 <Typography
                   variant="h6"
                   component="a"
-                  href={`tel:${alert.viber ? alert.viber : ""}`}
-                >{`${alert.viber ? alert.viber : ""}`}</Typography>
+                  href={`tel:${shortInfo.viber ? shortInfo.viber : ""}`}
+                >{`${shortInfo.viber ? shortInfo.viber : ""}`}</Typography>
               </Grid>
             </Grid>
             <Grid container sx={{ paddingLeft: "1rem" }} direction="row">
@@ -175,8 +179,8 @@ export const AlertPageToPrint = React.forwardRef<
                 <Typography
                   variant="h6"
                   component="a"
-                  href={`tel:${alert.phone}`}
-                >{`${alert.phone}`}</Typography>
+                  href={`tel:${shortInfo.phone}`}
+                >{`${shortInfo.phone}`}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -193,7 +197,7 @@ export const AlertPageToPrint = React.forwardRef<
             flexDirection: "row",
           }}
         >
-          {shortInfos.map((alert: IshortInfo, index: number) => {
+          {shortInfos.map((shortInfo: IshortInfo, index: number) => {
             return (
               <div
                 key={index}
@@ -213,21 +217,21 @@ export const AlertPageToPrint = React.forwardRef<
                     height: "25mm",
                   }}
                 >
-                  <Typography>{cutDescription(alert.title, 10)}</Typography>
+                  <Typography>{cutDescription(shortInfo.title, 10)}</Typography>
                   <Typography>
-                    {cutDescription(alert.description, 10)}
+                    {cutDescription(shortInfo.description, 10)}
                   </Typography>
-                  <Typography>{alert.name}</Typography>
-                  <Typography>{alert.phone}</Typography>
+                  <Typography>{shortInfo.name}</Typography>
+                  <Typography>{shortInfo.phone}</Typography>
                 </div>
-                {alert.qr && (
+                {shortInfo.qr && (
                   <div
                     style={{
                       textAlign: "center",
                       transform: " translateY(-100%)",
                     }}
                   >
-                    <QRCode value={alert.qr} size={64} />
+                    <QRCode value={shortInfo.qr} size={64} />
                   </div>
                 )}
               </div>

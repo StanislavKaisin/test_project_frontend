@@ -313,38 +313,36 @@ export const AlertPage = () => {
               comments.length > 0 &&
               comments.map((comment) => {
                 return (
-                  <>
-                    <Grid
-                      container
-                      direction="row"
-                      sx={{ padding: "0.5rem" }}
-                      key={comment._id}
-                    >
-                      <Grid item xs={12} sm={6}>
-                        <Typography
-                          variant="caption"
-                          component="p"
-                          style={{ fontWeight: 600 }}
-                        >{`${
-                          comment.user[0].name
-                            ? comment.user[0].name
-                            : "User not found"
-                        }:`}</Typography>
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <Typography
-                          variant="caption"
-                          component="p"
-                        >{`${comment.description}`}</Typography>
-                      </Grid>
-                      <Divider
-                        sx={{
-                          width: "80%",
-                        }}
-                        variant="middle"
-                      />
+                  <Grid
+                    container
+                    direction="row"
+                    sx={{ padding: "0.5rem" }}
+                    key={comment._id}
+                  >
+                    <Grid item xs={12} sm={6}>
+                      <Typography
+                        variant="caption"
+                        component="p"
+                        style={{ fontWeight: 600 }}
+                      >{`${
+                        comment.user[0].name
+                          ? comment.user[0].name
+                          : "User not found"
+                      }:`}</Typography>
                     </Grid>
-                  </>
+                    <Grid item xs={12} sm={6}>
+                      <Typography
+                        variant="caption"
+                        component="p"
+                      >{`${comment.description}`}</Typography>
+                    </Grid>
+                    <Divider
+                      sx={{
+                        width: "80%",
+                      }}
+                      variant="middle"
+                    />
+                  </Grid>
                 );
               })}
           </Paper>
