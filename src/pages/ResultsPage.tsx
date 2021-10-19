@@ -6,7 +6,7 @@ import { RootState } from "../app/store";
 import { fetchSearchResults } from "../redux/searchSlice";
 
 const header = (query: string) => {
-  return `Serach results ${query}:`;
+  return query ? `Serach results for "${query}":` : `All alerts:`;
 };
 
 export const ResultsPage = () => {
@@ -19,11 +19,13 @@ export const ResultsPage = () => {
       dispatch(fetchSearchResults({ alert: "" }));
     }
   }, [results]);
+
   return (
     <Container>
       <Typography variant="h6" component="p">
         {header(query)}
       </Typography>
+
       {results && <AlertsList data={results} />}
     </Container>
   );

@@ -7,6 +7,7 @@ import {
   ImageListItem,
   Paper,
   Typography,
+  useTheme,
 } from "@material-ui/core";
 import { useHistory } from "react-router";
 import { getAlert } from "../api/alert";
@@ -18,7 +19,7 @@ import AddComment from "../components/AddComment";
 import { getAlertComments } from "../api/comment";
 import { RootState } from "../app/store";
 import QRCode from "react-qr-code";
-import ReactToPrint, { useReactToPrint } from "react-to-print";
+import { useReactToPrint } from "react-to-print";
 import { AlertPageToPrint } from "./AlertPageToPrint";
 
 interface IUser {
@@ -39,6 +40,7 @@ export interface IAlertProps {
   phone: string;
   viber: string;
   qr?: string;
+  searchForOwner?: boolean;
 }
 
 export interface IComments {
@@ -53,6 +55,7 @@ export const AlertPage = () => {
   const user = useAppSelector((state: RootState) => state.user);
   const [alert, setAlert] = useState<null | IAlertProps>(null);
   const [comments, setComments] = useState<null | IComments[]>(null);
+  const theme = useTheme();
   // @ts-ignore
   const id = history.location.pathname.split("/").at(-1);
   useEffect(() => {
@@ -157,6 +160,24 @@ export const AlertPage = () => {
                   loading="lazy"
                 />
               </ImageListItem>
+              {alert?.searchForOwner == true && (
+                <Grid
+                  container
+                  direction="row"
+                  alignContent="center"
+                  justifyContent="center"
+                  sx={{
+                    alignItems: "center",
+                    color: theme.palette.error.light,
+                    textShadow: "1px 1px 2px",
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    component="p"
+                  >{`Searching for owner!`}</Typography>
+                </Grid>
+              )}
               <Typography
                 variant="body1"
                 component="p"
@@ -276,13 +297,18 @@ export const AlertPage = () => {
                 </div>
               </Grid>
             </Grid>
-            <Divider />
-            <Typography
-              sx={{ ml: 2, fontSize: "1.2rem", fontWeight: "bold" }}
-              variant="caption"
-              component="p"
-            >{`Comments: `}</Typography>
-            <Divider />
+            {comments && comments.length > 0 && (
+              <>
+                <Divider />
+                <Typography
+                  sx={{ ml: 2, fontSize: "1.2rem", fontWeight: "bold" }}
+                  variant="caption"
+                  component="p"
+                >{`Comments: `}</Typography>
+                <Divider />
+              </>
+            )}
+
             {comments &&
               comments.length > 0 &&
               comments.map((comment) => {
