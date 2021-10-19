@@ -27,7 +27,9 @@ export const UserUpdatePage = () => {
     const userToUpdate = {
       name: (data.get("name") as string).trim(),
       email: (data.get("email") as string).trim(),
-      password: (data.get("password") as string).trim(),
+      // password: (data.get("password") as string)
+      //   ? (data.get("password") as string).trim()
+      //   : null,
       phone: (data.get("phone") as string).trim(),
       viber: (data.get("viber") as string).trim(),
       address: (data.get("address") as string).trim(),

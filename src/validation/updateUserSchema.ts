@@ -5,7 +5,7 @@ const phoneNumberJoi = joi.extend(require("joi-phone-number"));
 export const updateUserSchema = joi.object().keys({
   name: joi.string().min(3).max(30),
   email: joi.string().email({ tlds: { allow: false } }),
-  password: joi.string().allow(null, "").alphanum().min(3).max(30).required(),
+  password: joi.string().allow(null, "").alphanum().min(3).max(30),
   phone: phoneNumberJoi
     .string()
     .phoneNumber({ defaultCountry: "UA", format: "international" }),
