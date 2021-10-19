@@ -37,6 +37,9 @@ export const AddAlertPage = () => {
   const userId = useAppSelector((state: RootState) => state.user._id);
   const userPhone = useAppSelector((state: RootState) => state.user.phone);
   const [file, setfile] = useState<File | null>(null);
+  const [fileUploadedLabel, setfileUploadedLabel] = useState<string | null>(
+    null
+  );
   const history = useHistory();
 
   useEffect(() => {
@@ -220,6 +223,7 @@ export const AddAlertPage = () => {
                         event.currentTarget.files.length
                       ) {
                         setfile(event.currentTarget.files[0]);
+                        setfileUploadedLabel(event.currentTarget.value);
                       }
                     }}
                   />
@@ -229,7 +233,7 @@ export const AddAlertPage = () => {
                     variant="outlined"
                     startIcon={<PhotoCamera />}
                   >
-                    Upload
+                    {fileUploadedLabel ? fileUploadedLabel : "Upload"}
                   </Button>
                 </label>
               </Grid>
