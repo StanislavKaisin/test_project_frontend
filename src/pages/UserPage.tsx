@@ -30,51 +30,81 @@ export const UserPage = () => {
   const [alerts, setalerts] = useState<null | any[]>(null);
   const [comments, setcomments] = useState<null | any[]>(null);
 
+  const [isOpenAlerts, setisOpenAlerts] = useState<boolean>(false);
+  const [isOpenComments, setisOpenComments] = useState<boolean>(false);
+
   useEffect(() => {
     if (!user.access_token) {
       history.push("user/signin");
     }
   }, []);
 
-  const handleAlerts = async () => {
-    dispatch(setLoader());
-    try {
-      const alertsFromDb = await getUserAlerts({ owner: user._id! });
-      setalerts(alertsFromDb);
-      dispatch(unSetLoader());
-    } catch (error) {
-      if (error instanceof Error) {
-        dispatch(unSetLoader());
-        dispatch(
-          setMessage({
-            snackbarOpen: true,
-            snackbarType: "error",
-            snackbarMessage: error.message,
-          })
-        );
+  useEffect(() => {
+    const loadAlerts = async () => {
+      if (isOpenAlerts) {
+        dispatch(setLoader());
+        try {
+          const alertsFromDb = await getUserAlerts({ owner: user._id! });
+          setalerts(alertsFromDb);
+          dispatch(unSetLoader());
+        } catch (error) {
+          if (error instanceof Error) {
+            dispatch(unSetLoader());
+            dispatch(
+              setMessage({
+                snackbarOpen: true,
+                snackbarType: "error",
+                snackbarMessage: error.message,
+              })
+            );
+          }
+        }
       }
+    };
+    loadAlerts();
+  }, [isOpenAlerts]);
+
+  useEffect(() => {
+    const loadComments = async () => {
+      if (isOpenComments) {
+        dispatch(setLoader());
+        try {
+          const commentsFromDb = await getUserComments(user._id as string);
+          setcomments(commentsFromDb);
+          dispatch(unSetLoader());
+        } catch (error) {
+          if (error instanceof Error) {
+            dispatch(unSetLoader());
+            dispatch(
+              setMessage({
+                snackbarOpen: true,
+                snackbarType: "error",
+                snackbarMessage: error.message,
+              })
+            );
+          }
+        }
+      }
+    };
+    loadComments();
+  }, [isOpenComments]);
+
+  const handleAlerts = async () => {
+    if (isOpenAlerts === false) {
+      setisOpenAlerts(true);
+    } else {
+      setisOpenAlerts(false);
     }
   };
 
   const handleComments = async () => {
-    dispatch(setLoader());
-    try {
-      const commentsFromDb = await getUserComments(user._id as string);
-      setcomments(commentsFromDb);
-      dispatch(unSetLoader());
-    } catch (error) {
-      if (error instanceof Error) {
-        dispatch(unSetLoader());
-        dispatch(
-          setMessage({
-            snackbarOpen: true,
-            snackbarType: "error",
-            snackbarMessage: error.message,
-          })
-        );
-      }
+    if (isOpenComments === false) {
+      setisOpenComments(true);
+    } else {
+      setisOpenComments(false);
     }
   };
+
   const handleLogOut = async () => {
     dispatch(logout(user as IUserCreateResponse));
     localStorage.removeItem("Pet!Alert");
