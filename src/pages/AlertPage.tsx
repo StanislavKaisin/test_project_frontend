@@ -15,10 +15,10 @@ import { BASE_URL } from "../api/api.config";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { setLoader, unSetLoader } from "../redux/loaderSlice";
 import { setMessage } from "../redux/messageSlice";
+import QRCode from "react-qr-code";
 import AddComment from "../components/AddComment";
 import { getAlertComments } from "../api/comment";
 import { RootState } from "../app/store";
-import QRCode from "react-qr-code";
 import { useReactToPrint } from "react-to-print";
 import { AlertPageToPrint } from "./AlertPageToPrint";
 
