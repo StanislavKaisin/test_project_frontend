@@ -65,12 +65,17 @@ export const AlertPage = () => {
         setAlert(data);
         dispatch(unSetLoader());
       })
-      .catch((error) => {
+      .catch((error: any) => {
+        let errorMessage;
+        if (error.response) {
+          errorMessage = error.response.data.message;
+        }
+
         dispatch(
           setMessage({
             snackbarOpen: true,
             snackbarType: "error",
-            snackbarMessage: error.message,
+            snackbarMessage: errorMessage ? errorMessage : error?.message,
           })
         );
         dispatch(unSetLoader());
@@ -83,12 +88,16 @@ export const AlertPage = () => {
         setComments(data);
         dispatch(unSetLoader());
       })
-      .catch((error) => {
+      .catch((error: any) => {
+        let errorMessage;
+        if (error.response) {
+          errorMessage = error.response.data.message;
+        }
         dispatch(
           setMessage({
             snackbarOpen: true,
             snackbarType: "error",
-            snackbarMessage: error.message,
+            snackbarMessage: errorMessage ? errorMessage : error?.message,
           })
         );
         dispatch(unSetLoader());
@@ -114,13 +123,17 @@ export const AlertPage = () => {
       const comments = await getAlertComments(id);
       setComments(comments);
       dispatch(unSetLoader());
-    } catch (error) {
+    } catch (error: any) {
+      let errorMessage;
+      if (error.response) {
+        errorMessage = error.response.data.message;
+      }
       if (error instanceof Error) {
         dispatch(
           setMessage({
             snackbarOpen: true,
             snackbarType: "error",
-            snackbarMessage: error.message,
+            snackbarMessage: errorMessage ? errorMessage : error?.message,
           })
         );
         dispatch(unSetLoader());

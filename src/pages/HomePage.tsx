@@ -47,12 +47,16 @@ export const HomePage = () => {
         setAlerts(data);
         dispatch(unSetLoader());
       })
-      .catch((error) => {
+      .catch((error: any) => {
+        let errorMessage;
+        if (error.response) {
+          errorMessage = error.response.data.message;
+        }
         dispatch(
           setMessage({
             snackbarOpen: true,
             snackbarType: "error",
-            snackbarMessage: error.message,
+            snackbarMessage: errorMessage ? errorMessage : error?.message,
           })
         );
         dispatch(unSetLoader());

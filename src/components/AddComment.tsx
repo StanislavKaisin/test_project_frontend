@@ -80,14 +80,18 @@ export default function AddComment(props: IAddCommentProps) {
           props.cb();
         });
       }
-    } catch (error) {
+    } catch (error: any) {
+      let errorMessage;
+      if (error.response) {
+        errorMessage = error.response.data.message;
+      }
       if (error instanceof Error) {
         dispatch(unSetLoader());
         dispatch(
           setMessage({
             snackbarOpen: true,
             snackbarType: "error",
-            snackbarMessage: error.message,
+            snackbarMessage: errorMessage ? errorMessage : error?.message,
           })
         );
       }

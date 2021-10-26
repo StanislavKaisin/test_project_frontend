@@ -51,13 +51,17 @@ export const fetchSearchResults = createAsyncThunk(
       const alertFromDbs = response.data;
       dispatch(setSearch({ query: query.alert, results: alertFromDbs }));
       dispatch(unSetLoader());
-    } catch (error) {
+    } catch (error: any) {
+      let errorMessage;
+      if (error.response) {
+        errorMessage = error.response.data.message;
+      }
       if (error instanceof Error) {
         dispatch(
           setMessage({
             snackbarOpen: true,
             snackbarType: "error",
-            snackbarMessage: error?.message,
+            snackbarMessage: errorMessage ? errorMessage : error?.message,
           })
         );
         dispatch(unSetLoader());
