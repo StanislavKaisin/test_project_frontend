@@ -78,6 +78,10 @@ export const searchSlice = createSlice({
       state.query = action.payload.query;
       state.results = action.payload.results;
     },
+    dropQuery: (state, action: ISearchAction) => {
+      state.query = initialState.query;
+      state.results = initialState.results;
+    },
   },
 });
 

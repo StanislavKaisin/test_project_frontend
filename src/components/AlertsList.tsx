@@ -9,15 +9,17 @@ import {
   CardActionArea,
   useTheme,
   useMediaQuery,
+  Skeleton,
 } from "@material-ui/core";
 import { useHistory } from "react-router";
 import { BASE_URL } from "../api/api.config";
 import { IAlertProps } from "../pages/AlertPage";
 import Pagination from "@mui/material/Pagination";
-import { useAppDispatch } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { fetchSearchResults } from "../redux/searchSlice";
 import { cutDescription } from "../helpers/cutDescription";
 import Favorite from "@mui/icons-material/Favorite";
+import { RootState } from "../app/store";
 
 interface ISearchAlertProps {
   docs: IAlertProps[];
@@ -30,6 +32,15 @@ interface ISearchAlertProps {
   prevPage: null | true;
   totalDocs: number;
   totalPages: number;
+  items?: IAlertProps[];
+  meta?: {
+    query: string;
+    currentPage: number;
+    itemCount: number;
+    itemsPerPage: number;
+    totalItems: number;
+    totalPages: number;
+  };
 }
 
 type IAlertsListProps = ISearchAlertProps | IAlertProps[];
@@ -37,6 +48,7 @@ type IAlertsListProps = ISearchAlertProps | IAlertProps[];
 export const AlertsList = (props: { data: IAlertsListProps }) => {
   const history = useHistory();
   const dispatch = useAppDispatch();
+  const query = useAppSelector((state: RootState) => state.search.query);
 
   const theme = useTheme();
   const larger = useMediaQuery(theme.breakpoints.down("sm"));
@@ -48,18 +60,25 @@ export const AlertsList = (props: { data: IAlertsListProps }) => {
   } else {
     cards = props.data as IAlertProps[];
   }
+  if ((props.data as ISearchAlertProps).items) {
+    cards = (props.data as ISearchAlertProps).items;
+  }
 
   const defaultImg = "./no-image-found-360x250.png";
 
   const [page, setPage] = React.useState(1);
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
-    dispatch(fetchSearchResults({ alert: "", pageNumber: value }));
+    dispatch(fetchSearchResults({ alert: query, pageNumber: value }));
   };
+
+  const totalPages = (props.data as ISearchAlertProps).totalPages
+    ? (props.data as ISearchAlertProps).totalPages
+    : (props.data as ISearchAlertProps).meta?.totalPages;
 
   return (
     <Container sx={{ py: 8 }} maxWidth="md">
-      {cards.length ? (
+      {cards && cards.length ? (
         <>
           <Grid container spacing={4}>
             {cards &&
@@ -120,9 +139,9 @@ export const AlertsList = (props: { data: IAlertsListProps }) => {
               ))}
           </Grid>
           <Grid container justifyContent="center" sx={{ mt: 3 }}>
-            {(props.data as ISearchAlertProps).docs && (
+            {totalPages && (
               <Pagination
-                count={(props.data as ISearchAlertProps).totalPages}
+                count={totalPages}
                 variant="outlined"
                 shape="rounded"
                 size={paginationSize}

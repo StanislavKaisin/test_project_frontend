@@ -21,6 +21,7 @@ import { getAlertComments } from "../api/comment";
 import { RootState } from "../app/store";
 import { useReactToPrint } from "react-to-print";
 import { AlertPageToPrint } from "./AlertPageToPrint";
+import { AlertsPagePreloader } from "../components/AlertsPagePreloader";
 
 interface IUser {
   name: string;
@@ -34,6 +35,7 @@ export interface IAlertProps {
   title: string;
   img: string;
   createdAt: string;
+  created_at?: string;
   numberOfViews: number;
   user: IUser[];
   description: string;
@@ -46,7 +48,8 @@ export interface IAlertProps {
 export interface IComments {
   _id: string;
   description: string;
-  user: IUser[];
+  user?: IUser[];
+  owner?: IUser;
 }
 
 export const AlertPage = () => {
@@ -56,6 +59,9 @@ export const AlertPage = () => {
   const [alert, setAlert] = useState<null | IAlertProps>(null);
   const [comments, setComments] = useState<null | IComments[]>(null);
   const theme = useTheme();
+  const loading = useAppSelector(
+    (state: RootState) => state.loader.value.loading
+  );
   // @ts-ignore
   const id = history.location.pathname.split("/").at(-1);
   useEffect(() => {
@@ -155,8 +161,19 @@ export const AlertPage = () => {
     content: () => componentRef.current,
   });
 
+  let date;
+  if (alert) {
+    if (alert.createdAt as string) {
+      date = new Date(alert.createdAt as string).toLocaleDateString();
+    }
+    if (alert.created_at as string) {
+      date = new Date(alert.created_at as string).toLocaleDateString();
+    }
+  }
+
   return (
     <>
+      {loading ? <AlertsPagePreloader /> : null}
       {alert && (
         <Container maxWidth="lg">
           <Paper>
@@ -270,9 +287,10 @@ export const AlertPage = () => {
                   >{` Published: `}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="caption" component="p">{` ${new Date(
-                    alert.createdAt
-                  ).toLocaleDateString()}`}</Typography>
+                  <Typography
+                    variant="caption"
+                    component="p"
+                  >{` ${date}`}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -325,6 +343,11 @@ export const AlertPage = () => {
             {comments &&
               comments.length > 0 &&
               comments.map((comment) => {
+                let userName = "User not found";
+                if (comment.user && comment.user[0].name)
+                  userName = comment.user[0].name;
+                if (comment.owner && comment.owner.name)
+                  userName = comment.owner.name;
                 return (
                   <Grid
                     container
@@ -332,29 +355,21 @@ export const AlertPage = () => {
                     sx={{ padding: "0.5rem" }}
                     key={comment._id}
                   >
-                    <Grid item xs={12} sm={6}>
-                      <Typography
-                        variant="caption"
-                        component="p"
-                        style={{ fontWeight: 600 }}
-                      >{`${
-                        comment.user[0].name
-                          ? comment.user[0].name
-                          : "User not found"
-                      }:`}</Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Typography
-                        variant="caption"
-                        component="p"
-                      >{`${comment.description}`}</Typography>
-                    </Grid>
-                    <Divider
-                      sx={{
-                        width: "80%",
-                      }}
-                      variant="middle"
-                    />
+                    <Paper sx={{ width: "100%", padding: 1 }}>
+                      <Grid item xs={12} sm={6}>
+                        <Typography
+                          variant="caption"
+                          component="p"
+                          style={{ fontWeight: 600 }}
+                        >{`${userName}:`}</Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <Typography
+                          variant="caption"
+                          component="p"
+                        >{`${comment.description}`}</Typography>
+                      </Grid>
+                    </Paper>
                   </Grid>
                 );
               })}

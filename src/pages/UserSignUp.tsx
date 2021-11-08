@@ -21,7 +21,6 @@ export default function UserSignUp() {
       viber: (data.get("viber") as string).trim(),
       address: (data.get("address") as string).trim(),
     };
-    // eslint-disable-next-line no-console
 
     const { error } = createUserSchema.validate(user, {
       errors: {

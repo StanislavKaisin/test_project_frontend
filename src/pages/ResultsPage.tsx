@@ -4,6 +4,7 @@ import { AlertsList } from "../components/AlertsList";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
 import { fetchSearchResults } from "../redux/searchSlice";
+import { AlertsListPreloader } from "../components/AlertsListPreloader";
 
 const header = (query: string) => {
   return query ? `Serach results for "${query}":` : `All alerts:`;
@@ -12,6 +13,11 @@ const header = (query: string) => {
 export const ResultsPage = () => {
   const query = useAppSelector((state: RootState) => state.search.query);
   const results = useAppSelector((state: RootState) => state.search.results);
+  const loading = useAppSelector(
+    (state: RootState) => state.loader.value.loading
+  );
+
+  console.log(`loading`, loading);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -25,8 +31,8 @@ export const ResultsPage = () => {
       <Typography variant="h6" component="p">
         {header(query)}
       </Typography>
-
-      {results && <AlertsList data={results} />}
+      {loading ? <AlertsListPreloader /> : null}
+      {results ? <AlertsList data={results} /> : null}
     </Container>
   );
 };
