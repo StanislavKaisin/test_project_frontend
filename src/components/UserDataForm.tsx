@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,6 +10,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import styles from "./PhoneField.module.css";
+
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
 const theme = createTheme();
 
@@ -45,6 +49,7 @@ export const UserDataForm = (props: IUserDataFormProps) => {
   });
   const handleSubmit = props.handleSubmit;
   const update = props.update;
+  // const [value, setValue] = useState();
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -109,24 +114,31 @@ export const UserDataForm = (props: IUserDataFormProps) => {
                 </Grid>
               )}
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
+                <PhoneInput
+                  onChange={() => {}}
+                  placeholder="Phone*"
                   name="phone"
-                  label="Phone"
+                  label="phone"
                   type="phone"
                   id="phone"
                   autoComplete="phone"
+                  required
+                  limitMaxLength
+                  className={styles.MyPhoneInput}
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  fullWidth
+                <PhoneInput
+                  placeholder="Viber"
+                  onChange={() => {}}
                   name="viber"
                   label="Viber"
                   type="phone"
                   id="viber"
                   autoComplete="phone"
+                  required
+                  limitMaxLength
+                  className={styles.MyPhoneInput}
                 />
               </Grid>
               <Grid item xs={12}>

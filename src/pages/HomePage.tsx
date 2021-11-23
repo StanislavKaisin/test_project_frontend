@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Skeleton,
   TextField,
   useMediaQuery,
   useTheme,
@@ -9,16 +10,21 @@ import React, { useEffect, useRef, useState } from "react";
 import SearchIcon from "@material-ui/icons/Search";
 
 import { getAlerts } from "../api/alert";
-import { useAppDispatch } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { AlertsList } from "../components/AlertsList";
 import { setLoader, unSetLoader } from "../redux/loaderSlice";
 import { setMessage } from "../redux/messageSlice";
 import { IAlertProps } from "./AlertPage";
 import { useHistory } from "react-router";
-import { fetchSearchResults } from "../redux/searchSlice";
+import { fetchSearchResults, searchActions } from "../redux/searchSlice";
+import { RootState } from "../app/store";
+import { AlertsListPreloader } from "../components/AlertsListPreloader";
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
+  const loading = useAppSelector(
+    (state: RootState) => state.loader.value.loading
+  );
   const searchField = useRef<HTMLInputElement>();
   const [search, setsearch] = useState("");
   const theme = useTheme();
@@ -40,6 +46,7 @@ export const HomePage = () => {
   };
 
   const [alerts, setAlerts] = useState<null | IAlertProps[]>(null);
+
   useEffect(() => {
     dispatch(setLoader());
     getAlerts()
@@ -47,12 +54,16 @@ export const HomePage = () => {
         setAlerts(data);
         dispatch(unSetLoader());
       })
-      .catch((error) => {
+      .catch((error: any) => {
+        let errorMessage;
+        if (error.response) {
+          errorMessage = error.response.data.message;
+        }
         dispatch(
           setMessage({
             snackbarOpen: true,
             snackbarType: "error",
-            snackbarMessage: error.message,
+            snackbarMessage: errorMessage ? errorMessage : error?.message,
           })
         );
         dispatch(unSetLoader());
@@ -60,6 +71,10 @@ export const HomePage = () => {
       .finally(() => {
         dispatch(unSetLoader());
       });
+  }, []);
+
+  useEffect(() => {
+    searchActions.dropQuery({ query: "", results: null });
   }, []);
   return (
     <div>
@@ -100,7 +115,8 @@ export const HomePage = () => {
           Search
         </Button>
       </Box>
-      {alerts && <AlertsList data={alerts} />}
+      {loading ? <AlertsListPreloader /> : null}
+      {alerts ? <AlertsList data={alerts} /> : null}
     </div>
   );
 };

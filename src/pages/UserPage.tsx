@@ -47,14 +47,18 @@ export const UserPage = () => {
           const alertsFromDb = await getUserAlerts({ owner: user._id! });
           setalerts(alertsFromDb);
           dispatch(unSetLoader());
-        } catch (error) {
+        } catch (error: any) {
+          let errorMessage;
+          if (error.response) {
+            errorMessage = error.response.data.message;
+          }
           if (error instanceof Error) {
             dispatch(unSetLoader());
             dispatch(
               setMessage({
                 snackbarOpen: true,
                 snackbarType: "error",
-                snackbarMessage: error.message,
+                snackbarMessage: errorMessage ? errorMessage : error.message,
               })
             );
           }
@@ -72,14 +76,18 @@ export const UserPage = () => {
           const commentsFromDb = await getUserComments(user._id as string);
           setcomments(commentsFromDb);
           dispatch(unSetLoader());
-        } catch (error) {
+        } catch (error: any) {
+          let errorMessage;
+          if (error.response) {
+            errorMessage = error.response.data.message;
+          }
           if (error instanceof Error) {
             dispatch(unSetLoader());
             dispatch(
               setMessage({
                 snackbarOpen: true,
                 snackbarType: "error",
-                snackbarMessage: error.message,
+                snackbarMessage: errorMessage ? errorMessage : error.message,
               })
             );
           }
@@ -214,7 +222,7 @@ export const UserPage = () => {
         >
           <Typography style={{ fontWeight: 600 }}>Your alerts</Typography>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{ padding: "0" }}>
           <CommentsList list={alerts as any[]} />
         </AccordionDetails>
       </Accordion>

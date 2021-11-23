@@ -26,6 +26,12 @@ import { createAlert } from "../api/alert";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { useHistory } from "react-router";
 
+import styles from "../components/PhoneField.module.css";
+
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
+import { PhoneLabel } from "../components/PhoneLabel";
+
 const theme = createTheme();
 const Input = styled("input")({
   display: "none",
@@ -115,13 +121,17 @@ export const AddAlertPage = () => {
             snackbarMessage: "Alerted succesfully.",
           })
         );
-      } catch (error) {
+      } catch (error: any) {
+        let errorMessage;
+        if (error.response) {
+          errorMessage = error.response.data.message;
+        }
         if (error instanceof Error) {
           dispatch(
             setMessage({
               snackbarOpen: true,
               snackbarType: "error",
-              snackbarMessage: error?.message,
+              snackbarMessage: errorMessage ? errorMessage : error?.message,
             })
           );
           dispatch(unSetLoader());
@@ -179,26 +189,35 @@ export const AddAlertPage = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
+                <PhoneLabel label="Phone*" />
+                <PhoneInput
+                  onChange={() => {}}
+                  placeholder="Viber"
+                  value={userPhone ? userPhone : ""}
                   name="phone"
                   label="Phone"
                   type="phone"
                   id="phone"
                   autoComplete="phone"
-                  defaultValue={userPhone ? userPhone : ""}
+                  required
+                  limitMaxLength
+                  className={styles.MyPhoneInput}
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  fullWidth
+                <PhoneLabel label="Viber" />
+                <PhoneInput
+                  onChange={() => {}}
+                  placeholder="Viber"
+                  value={userPhone ? userPhone : ""}
                   name="viber"
                   label="Viber"
                   type="phone"
                   id="viber"
                   autoComplete="phone"
-                  defaultValue={userPhone ? userPhone : ""}
+                  required
+                  limitMaxLength
+                  className={styles.MyPhoneInput}
                 />
               </Grid>
               <Grid item xs={12}>

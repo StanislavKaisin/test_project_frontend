@@ -33,7 +33,7 @@ export const AlertPageToPrint = React.forwardRef<
   const photo = alert?.img ? `${BASE_URL}/${alert.img}` : false;
   const shortInfo: IshortInfo = {
     title: alert?.title as string,
-    description: cutDescription(alert?.description!, 10),
+    description: cutDescription(alert?.description!, 80),
     name: alert?.user.length
       ? (alert?.user[0].name as string)
       : "User not found",

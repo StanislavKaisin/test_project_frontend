@@ -51,13 +51,17 @@ export const fetchSearchResults = createAsyncThunk(
       const alertFromDbs = response.data;
       dispatch(setSearch({ query: query.alert, results: alertFromDbs }));
       dispatch(unSetLoader());
-    } catch (error) {
+    } catch (error: any) {
+      let errorMessage;
+      if (error.response) {
+        errorMessage = error.response.data.message;
+      }
       if (error instanceof Error) {
         dispatch(
           setMessage({
             snackbarOpen: true,
             snackbarType: "error",
-            snackbarMessage: error?.message,
+            snackbarMessage: errorMessage ? errorMessage : error?.message,
           })
         );
         dispatch(unSetLoader());
@@ -73,6 +77,10 @@ export const searchSlice = createSlice({
     setSearch: (state, action: ISearchAction) => {
       state.query = action.payload.query;
       state.results = action.payload.results;
+    },
+    dropQuery: (state, action: ISearchAction) => {
+      state.query = initialState.query;
+      state.results = initialState.results;
     },
   },
 });
