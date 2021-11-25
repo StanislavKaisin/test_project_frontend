@@ -77,7 +77,7 @@ export const AlertsList = (props: { data: IAlertsListProps }) => {
     : (props.data as ISearchAlertProps).meta?.totalPages;
 
   return (
-    <Container sx={{ py: 8 }} maxWidth="md">
+    <Container sx={{ py: 8 }} maxWidth="md" data-testid="AlertsList">
       {cards && cards.length ? (
         <>
           <Grid container spacing={4}>

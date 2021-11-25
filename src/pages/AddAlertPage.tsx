@@ -165,6 +165,7 @@ export const AddAlertPage = () => {
             noValidate
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
+            data-testid="addAlertForm"
           >
             <Grid container spacing={2}>
               <Grid item xs={12}>

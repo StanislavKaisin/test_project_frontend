@@ -6,7 +6,12 @@ export const AlertsListPreloader = () => {
   cards.fill(1);
   return (
     <>
-      <Grid container spacing={4} sx={{ padding: "64px 24px" }}>
+      <Grid
+        container
+        spacing={4}
+        sx={{ padding: "64px 24px" }}
+        data-testid="AlertsPagePreloader"
+      >
         {cards &&
           cards.map((card, index) => (
             <Grid item key={index} xs={12} sm={6} md={4}>

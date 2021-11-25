@@ -222,7 +222,7 @@ export const UserPage = () => {
         >
           <Typography style={{ fontWeight: 600 }}>Your alerts</Typography>
         </AccordionSummary>
-        <AccordionDetails sx={{ padding: "0" }}>
+        <AccordionDetails sx={{}}>
           <CommentsList list={alerts as any[]} />
         </AccordionDetails>
       </Accordion>

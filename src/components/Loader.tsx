@@ -5,6 +5,7 @@ import { LinearProgress } from "@material-ui/core";
 export default function Loader() {
   return (
     <Box
+      data-testid="loader"
       sx={{
         width: "100%",
         position: "fixed",

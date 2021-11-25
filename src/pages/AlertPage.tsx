@@ -63,7 +63,13 @@ export const AlertPage = () => {
     (state: RootState) => state.loader.value.loading
   );
   // @ts-ignore
-  const id = history.location.pathname.split("/").at(-1);
+  // next line failed in react-testing library
+  // const id = history.location.pathname.split("/").at(-1);
+  const id =
+    history.location.pathname.split("/")[
+      history.location.pathname.split("/").length - 1
+    ];
+
   useEffect(() => {
     dispatch(setLoader());
     getAlert(id)
@@ -178,7 +184,12 @@ export const AlertPage = () => {
         <Container maxWidth="lg">
           <Paper>
             <Grid container direction="column">
-              <Typography variant="h4" component="h1" align="center">
+              <Typography
+                variant="h4"
+                component="h1"
+                align="center"
+                data-testid="title"
+              >
                 {alert.title}
               </Typography>
               <ImageListItem key={8} sx={{ margin: "0 auto" }}>
@@ -213,6 +224,7 @@ export const AlertPage = () => {
                 component="p"
                 align="center"
                 sx={{ paddingLeft: "1rem", paddingRight: "1rem" }}
+                data-testid="description"
               >
                 {alert.description}
               </Typography>
@@ -309,14 +321,14 @@ export const AlertPage = () => {
                   textAlign: "center",
                 }}
               >
-                <QRCode value={fullPagePath} size={128} />
+                <QRCode value={fullPagePath} size={128} data-testid="QRCode" />
               </div>
             </Grid>
 
             <Divider />
             <Grid container sx={{ mb: 2, mt: 2 }} spacing={2}>
               <Grid item alignContent="center" xs={12} sm={6}>
-                <AddComment cb={handleAddComment} />
+                <AddComment cb={handleAddComment} data-testid="AddComment" />
               </Grid>
               <Grid item alignContent="center" xs={12} sm={6}>
                 <Button fullWidth variant="outlined" onClick={handlePrint}>

@@ -17,7 +17,6 @@ export const ResultsPage = () => {
     (state: RootState) => state.loader.value.loading
   );
 
-  console.log(`loading`, loading);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -28,7 +27,7 @@ export const ResultsPage = () => {
 
   return (
     <Container>
-      <Typography variant="h6" component="p">
+      <Typography variant="h6" component="p" data-testid="resultsListTitile">
         {header(query)}
       </Typography>
       {loading ? <AlertsListPreloader /> : null}
