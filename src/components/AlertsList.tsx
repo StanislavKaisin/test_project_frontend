@@ -110,8 +110,13 @@ export const AlertsList = (props: { data: IAlertsListProps }) => {
                         <Typography
                           variant="caption"
                           component="p"
-                        >{`Number of views: ${card.numberOfViews}`}</Typography>
-                        {card?.searchForOwner == true && (
+                        >{`Number of views: ${
+                          card.numberOfViews
+                            ? card.numberOfViews
+                            : card.number_of_views
+                        }`}</Typography>
+                        {(card?.searchForOwner == true ||
+                          card?.search_for_owner == true) && (
                           <Grid
                             container
                             direction="row"

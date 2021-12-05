@@ -10,7 +10,7 @@ export function MessageSnackBar() {
   const snackbarOpen = useAppSelector(selectMessage).snackbarOpen;
   const snackbarType = useAppSelector(selectMessage).snackbarType;
   const snackbarMessage = useAppSelector(selectMessage).snackbarMessage;
-  const handleClose = (event: React.SyntheticEvent<Element, Event>) => {
+  const handleClose = () => {
     dispatch(unSetMessage());
   };
 

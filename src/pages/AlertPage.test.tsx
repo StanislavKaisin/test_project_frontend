@@ -9,7 +9,7 @@ import { act } from "react-dom/test-utils";
 describe("AlertPage", () => {
   beforeEach(() => {
     const history = createMemoryHistory();
-    history.push("/alert/2");
+    history.push("/alert/1");
     render(
       <Router history={history}>
         <Provider store={store}>
@@ -52,7 +52,7 @@ describe("AlertPage", () => {
   it("renders add comment dialog", async () => {
     waitFor(async () => {
       const history = createMemoryHistory();
-      history.push("/alert/2");
+      history.push("/alert/1");
       const { baseElement } = render(
         <Router history={history}>
           <Provider store={store}>
@@ -61,5 +61,11 @@ describe("AlertPage", () => {
         </Router>
       );
     });
+  });
+
+  it("renders all data from db", async () => {
+    expect(() => screen.getByText("undefined")).toThrow(
+      /Unable to find an element with the text: undefined./i
+    );
   });
 });

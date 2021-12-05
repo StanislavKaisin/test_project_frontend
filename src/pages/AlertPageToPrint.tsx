@@ -17,7 +17,8 @@ interface IshortInfo {
   phone: string;
   viber: string;
   qr: string;
-  searchForOwner: boolean;
+  searchForOwner?: boolean;
+  search_for_owner?: boolean;
 }
 
 export const AlertPageToPrint = React.forwardRef<
@@ -40,7 +41,9 @@ export const AlertPageToPrint = React.forwardRef<
     phone: alert?.phone as string,
     viber: alert?.viber as string,
     qr: fullPagePath as string,
-    searchForOwner: alert?.searchForOwner as boolean,
+    searchForOwner: (alert?.searchForOwner as boolean)
+      ? (alert?.searchForOwner as boolean)
+      : (alert?.search_for_owner as boolean),
   };
   const shortInfos: IshortInfo[] = [];
   shortInfos.length = 8;

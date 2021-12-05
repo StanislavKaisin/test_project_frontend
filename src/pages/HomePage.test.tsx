@@ -30,4 +30,9 @@ describe("Home page", () => {
     const elements = (await screen.findAllByText(/title/i)) as HTMLElement[];
     expect(elements.length <= 10).toBeTruthy();
   });
+  it("renders all data from db", async () => {
+    expect(() => screen.getAllByText("undefined")).toThrow(
+      /Unable to find an element with the text: undefined./i
+    );
+  });
 });

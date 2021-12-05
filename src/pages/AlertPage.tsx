@@ -36,13 +36,15 @@ export interface IAlertProps {
   img: string;
   createdAt: string;
   created_at?: string;
-  numberOfViews: number;
+  numberOfViews?: number;
+  number_of_views?: number;
   user: IUser[];
   description: string;
   phone: string;
   viber: string;
   qr?: string;
   searchForOwner?: boolean;
+  search_for_owner?: boolean;
 }
 
 export interface IComments {
@@ -201,7 +203,7 @@ export const AlertPage = () => {
                   loading="lazy"
                 />
               </ImageListItem>
-              {alert?.searchForOwner == true && (
+              {(alert?.searchForOwner == true || alert?.search_for_owner) && (
                 <Grid
                   container
                   direction="row"
@@ -284,10 +286,11 @@ export const AlertPage = () => {
                   >{`Number of views:`}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Typography
-                    variant="caption"
-                    component="p"
-                  >{`${alert.numberOfViews}`}</Typography>
+                  <Typography variant="caption" component="p">{`${
+                    alert.numberOfViews
+                      ? alert.numberOfViews
+                      : alert.number_of_views
+                  }`}</Typography>
                 </Grid>
               </Grid>
               <Divider variant="middle" />
