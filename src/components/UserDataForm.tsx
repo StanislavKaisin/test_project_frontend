@@ -49,7 +49,6 @@ export const UserDataForm = (props: IUserDataFormProps) => {
   });
   const handleSubmit = props.handleSubmit;
   const update = props.update;
-  // const [value, setValue] = useState();
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -77,6 +76,7 @@ export const UserDataForm = (props: IUserDataFormProps) => {
             noValidate
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
+            data-testid="signUpForm"
           >
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -125,6 +125,7 @@ export const UserDataForm = (props: IUserDataFormProps) => {
                   required
                   limitMaxLength
                   className={styles.MyPhoneInput}
+                  data-testid="phone"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -139,6 +140,7 @@ export const UserDataForm = (props: IUserDataFormProps) => {
                   required
                   limitMaxLength
                   className={styles.MyPhoneInput}
+                  data-testid="viber"
                 />
               </Grid>
               <Grid item xs={12}>

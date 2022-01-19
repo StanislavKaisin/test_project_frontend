@@ -23,7 +23,12 @@ export default function AddComment(props: IAddCommentProps) {
   const user = useAppSelector((state: RootState) => state.user);
   const history = useHistory();
   // @ts-ignore
-  const alert = history.location.pathname.split("/").at(-1);
+  // next line failed in react-testing library
+  // const alert = history.location.pathname.split("/").at(-1);
+  const alert =
+    history.location.pathname.split("/")[
+      history.location.pathname.split("/").length - 1
+    ];
   const handleClickOpen = () => {
     if (!user.access_token) {
       dispatch(
@@ -104,7 +109,12 @@ export default function AddComment(props: IAddCommentProps) {
       <Button variant="outlined" onClick={handleClickOpen} fullWidth>
         Add a comment
       </Button>
-      <Dialog open={open} onClose={handleClose} maxWidth="xs">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth="xs"
+        data-testid="dialog"
+      >
         <DialogTitle>Add a comment</DialogTitle>
         <DialogContent>
           <TextField

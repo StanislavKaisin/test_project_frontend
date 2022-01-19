@@ -94,6 +94,7 @@ export const HomePage = () => {
           margin="normal"
           fullWidth
           id="alert"
+          data-testid="search-alert"
           label="Search alert"
           name="alert"
           autoFocus

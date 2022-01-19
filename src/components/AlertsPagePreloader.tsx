@@ -4,7 +4,7 @@ import React from "react";
 export const AlertsPagePreloader = () => {
   return (
     <>
-      <Paper sx={{ padding: 1 }}>
+      <Paper sx={{ padding: 1 }} data-testid="AlertsPagePreloader">
         <Skeleton
           variant="rectangular"
           animation="wave"

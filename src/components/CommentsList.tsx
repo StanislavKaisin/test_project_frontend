@@ -22,6 +22,7 @@ export interface IItem {
   alertId?: string;
   alert?: {
     _id: number;
+    title: string;
   };
 }
 
@@ -62,12 +63,17 @@ export const CommentsList = (props: ICommentsListProps) => {
                     }}
                   >
                     <ListItemButton>
-                      <Paper sx={{ width: "100%" }}>
+                      <Paper sx={{ width: "100%", padding: "0.2rem" }}>
                         <Typography sx={{ fontWeight: "900" }}>
                           Title:
                         </Typography>
                         <Typography sx={{}}>
-                          {`${cutDescription(item.title, 10)}`}
+                          {`${cutDescription(
+                            item.title
+                              ? item.title
+                              : (item.alert?.title as string),
+                            10
+                          )}`}
                         </Typography>
                         <Typography sx={{ fontWeight: "900" }}>
                           Description:
