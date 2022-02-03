@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Skeleton,
   TextField,
   useMediaQuery,
   useTheme,
